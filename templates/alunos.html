@@ -6,6 +6,9 @@
 
 {% block body %}
 <div class="alunos">
+    {% if alunos|length < 1 %}
+    <h2>Não há alunos cadastrados.</h2>
+    {%  else %}
     <h1>Dados</h1>
     <table>
         <tr>
@@ -19,28 +22,31 @@
         </tr>
         {% for aluno in alunos %}
         <tr>
+            <td>{{aluno.id}}</td>
             <td>{{aluno.nome}}</td>
             <td>{{aluno.telefone}}</td>
             <td>{{aluno.email}}</td>
             <td>{{aluno.nascimento}}</td>
             <td>{{aluno.genero}}</td>
             <td>
-                <a href="">Deletar</a>
+                <a href="/delete/aluno/{{aluno.id}}">Deletar</a>
                 <br>
-                <a href="">Editar</a>
+                <a href="/update/aluno/{{aluno.id}}">Editar</a>
             </td>
         </tr>
         {% endfor %}
     </table>
-
+    {%  endif %}
     <form action="/alunos.html" method="POST">
         <input type="text" name="nome" id="nome" value="Nome">
         <input type="text" name="tel" id="tel" value=Telefone>
         <input type="text" name="email" id="email" value="Email">
-        <input type="text" name="born" id="born" value="Nascimento"> 
+        <input type="text" name="born" id="born" value="Nascimento">
         <input type="text" name="genre" id="genre" value="Genero">
         <input type="submit" value="Enviar Dados">
     </form>
+    <br><br><br>
+    <a href="index.html">Retornar à HomePage</a>
 
 </div>
 {% endblock %}

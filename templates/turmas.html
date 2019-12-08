@@ -6,6 +6,9 @@
 
 {% block body %}
 <div class="turma">
+    {% if turmas|length < 1 %}
+    <h2>Não há turmas cadastrados.</h2>
+    {%  else %}
     <h1>Dados</h1>
     <table>
         <tr>
@@ -26,14 +29,14 @@
             <td>{{turma.turno}}</td>
             <td>{{turma.escola.nome}}</td>
             <td>
-                <a href="">Deletar</a>
+                <a href="/delete/turma/{{turma.id}}">Deletar</a>
                 <br>
-                <a href="">Editar</a>
+                <a href="/update/turma/{{turma.id}}">Editar</a>
             </td>
         </tr>
         {% endfor %}
     </table>
-
+    {%  endif %}
     <form action="/turmas.html" method="POST">
         <input type="text" name="nivel" id="nivel">
         <input type="text" name="ano" id="ano">

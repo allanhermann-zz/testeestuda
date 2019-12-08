@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Estuda.com</title>
+{% endblock %}
+
+{% block body %}
+<div class="aulas">
+    <h1>Selecione as aulas que deseja matricular o aluno {{aluno.nome}}</h1>
+    <table>
+        <tr>
+            <th>Aula</th>
+            <th></th>
+        </tr>
+        {% for turma in turmas %}
+        <tr>
+            <td>{{turma.nivel}}</td>
+            <td>{{turma.ano}}</td>
+            <td>{{turma.serie}}</td>
+            <td>{{turma.turno}}</td>
+            <td><a href="">Selecionar</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</div>
+{% endblock %}

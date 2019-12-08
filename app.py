@@ -23,7 +23,7 @@ class Escola(db.Model):
     nome = db.Column(db.String(45))
     endereco = db.Column(db.String(90))
     situacao = db.Column(db.String(45), nullable=True)
-    data = db.Column(db.Date, nullable=True)
+    data = db.Column(db.Integer, nullable=True)
     turmas = db.relationship("Turma", backref="escola", lazy="dynamic")
 
     def __init__(self, nome, endereco, situacao, data):
@@ -97,8 +97,7 @@ def turmas():
         ano = turmadados["ano"]
         serie = turmadados["serie"]
         turno = turmadados["turno"]
-        var = turmadados["escola"]
-        escola = Escola.query.filter_by(nome=var).first()
+        escola = Escola.query.filter_by(nome=turmadados["escola"]).first()
         nova_turma = Turma(
             nivel=nivel, ano=ano, serie=serie, turno=turno, escola=escola
         )
@@ -121,7 +120,7 @@ def alunos():
         name = alunodados["nome"]
         tel = alunodados["tel"]
         mail = alunodados["email"]
-        born = datetime.strptime(alunodados["born"],"%d-%m-%Y")
+        born = datetime.strptime(alunodados["born"], "%d-%m-%Y")
         genre = alunodados["genre"]
         novo_aluno = Aluno(
             nome=name, telefone=tel, email=mail, nascimento=born, genero=genre
@@ -129,7 +128,7 @@ def alunos():
         try:
             db.session.add(novo_aluno)
             db.session.commit()
-            return render_template("/aulas.html",aluno=novo_aluno)
+            return redirect("/alunos.html")
         except:
             return "Erro durante a Inserção, cheque seus dados"
 
@@ -137,9 +136,99 @@ def alunos():
         alunos = Aluno.query.order_by(Aluno.id).all()
         return render_template("alunos.html", alunos=alunos)
 
-@app.route("/aulas.html", methods=["GET","POST"])
-def aulas():
-    return render_template("/index.html")
+
+# @app.route("/aulas.html")
+# def selecaulas():
+#    return render_template("aulas.html", turmas=turmas, aluno=aluno)
+
+
+@app.route("/delete/aluno/<int:id>")
+def deletealuno(id):
+    try:
+        db.session.delete(Aluno.query.get_or_404(id))
+        db.session.commit()
+        return redirect("/alunos.html")
+    except:
+        "Ocorreu um erro"
+
+
+@app.route("/update/aluno/<int:id>",  methods=["POST", "GET"])
+def updatealuno(id):
+    aluno = Aluno.query.get_or_404(id)
+    if request.method == "POST":
+        alunodados = request.form
+        aluno.nome = alunodados["nome"]
+        aluno.telefone = alunodados["tel"]
+        aluno.email = alunodados["email"]
+        aluno.nascimento = alunodados["born"]
+        aluno.genero = alunodados["genre"]
+        try:
+            db.session.commit()
+            return redirect("../../alunos.html")
+        except:
+            return "Erro durante a Atualização, cheque seus dados"
+
+    else:
+        return render_template("updatealuno.html", aluno=aluno)
+
+
+@app.route("/delete/turma/<int:id>")
+def deleteturma(id):
+    try:
+        db.session.delete(Turma.query.get_or_404(id))
+        db.session.commit()
+        return redirect("/turmas.html")
+    except:
+        "Ocorreu um erro"
+
+
+@app.route("/update/turma/<int:id>",  methods=["POST", "GET"])
+def updateturma(id):
+    turma = Turma.query.get_or_404(id)
+    if request.method == "POST":
+        turmadados = request.form
+        turma.nivel = turmadados["nivel"]
+        turma.ano = turmadados["ano"]
+        turma.serie = turmadados["serie"]
+        turma.turno = turmadados["turno"]
+        turma.escola = Escola.query.filter_by(nome=turmadados["escola"]).first()
+        try:
+            db.session.commit()
+            return redirect("../../turmas.html")
+        except:
+            return "Erro durante a Atualização, cheque seus dados"
+
+    else:
+        return render_template("updateturma.html", turma=turma)
+
+
+@app.route("/delete/escola/<int:id>")
+def deleteescola(id):
+    try:
+        db.session.delete(Escola.query.get_or_404(id))
+        db.session.commit()
+        return redirect("/escolas.html")
+    except:
+        "Ocorreu um erro"
+
+
+@app.route("/update/escola/<int:id>", methods=["POST", "GET"])
+def updateescola(id):
+    escola = Escola.query.get_or_404(id)
+    if request.method == "POST":
+        escoladados = request.form
+        escola.nome = escoladados["nome"]
+        escola.endereco = escoladados["endereco"]
+        escola.situacao = escoladados["situacao"]
+        escola.data = escoladados["data"]
+        try:
+            db.session.commit()
+            return redirect("../../escolas.html")
+        except:
+            return "Erro durante a Atualização, cheque seus dados"
+
+    else:
+        return render_template("updateescola.html", escola=escola)
 
 
 @app.route("/")

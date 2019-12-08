@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Estuda.com</title>
+{% endblock %}
+
+{% block body %}
+<div class="escolaupdate">
+    <h1>Dados</h1>
+    <form action="/update/escola/{{escola.id}}" method="POST">
+        <input type="text" name="nome" id="nome" value="{{escola.nome}}">
+        <input type="text" name="endereco" id="tel" value="{{escola.endereco}}">
+        <input type="text" name="situacao" id="email" value="{{escola.situacao}}">
+        <input type="text" name="data" id="data" value="{{escola.data}}">
+        <input type="submit" value="Atualizar Dados">
+    </form>
+    <br><br><br>
+    <a href="../../index.html">Retornar à HomePage</a>
+</div>
+{% endblock %}
