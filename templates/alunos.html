@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Estuda.com</title>
+{% endblock %}
+
+{% block body %}
+<div class="alunos">
+    <h1>Dados</h1>
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Nome</th>
+            <th>Telefone</th>
+            <th>Email</th>
+            <th>Nascimento</th>
+            <th>Gênero</th>
+            <th>Ações</th>
+        </tr>
+        {% for aluno in alunos %}
+        <tr>
+            <td>{{aluno.nome}}</td>
+            <td>{{aluno.telefone}}</td>
+            <td>{{aluno.email}}</td>
+            <td>{{aluno.nascimento}}</td>
+            <td>{{aluno.genero}}</td>
+            <td>
+                <a href="">Deletar</a>
+                <br>
+                <a href="">Editar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <form action="/alunos.html" method="POST">
+        <input type="text" name="nome" id="nome" value="Nome">
+        <input type="text" name="tel" id="tel" value=Telefone>
+        <input type="text" name="email" id="email" value="Email">
+        <input type="text" name="born" id="born" value="Nascimento"> 
+        <input type="text" name="genre" id="genre" value="Genero">
+        <input type="submit" value="Enviar Dados">
+    </form>
+
+</div>
+{% endblock %}
