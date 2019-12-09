@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Estuda.com</title>
+{% endblock %}
+
+{% block body %}
+<div class="escolabuscar">
+    <h1>Digite o nome da Escola em que {{ aluno.nome }} estuda:</h1>
+    <br>
+    <form action="/escolabuscar.html" method="POST">
+        <input type="text" name="nome" id="nome" value="Nome da Escola">
+        <input type="text" name="alid" id="alid" value="{{ aluno.id }}" readonly>
+        <input type="submit" value="Buscar Escola">
+    </form>
+    {% if escolas|length > 0 %}
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Nome</th>
+            <th></th>
+        </tr>
+        {% for escola in escolas %}
+        <tr>
+            <td>{{escola.id}}</td>
+            <td>{{escola.nome}}</td>
+            <td><a href="/escolabuscar/{{aluno.id}}/{{escola.id}}">Selecionar</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+    <br><br><br>
+    <a href="../../index.html">Retornar à HomePage</a>
+</div>
+{% endblock %}
