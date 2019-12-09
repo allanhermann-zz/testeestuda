@@ -24,9 +24,13 @@ class Escola(db.Model):
     endereco = db.Column(db.String(90))
     situacao = db.Column(db.String(45), nullable=True)
     data = db.Column(db.Integer, nullable=True)
+<<<<<<< HEAD
     turmas = db.relationship(
         "Turma", backref="escola", lazy="dynamic"
     )
+=======
+    turmas = db.relationship("Turma", backref="escola", lazy="dynamic")
+>>>>>>> parent of d401368... Added relationships insertion
 
     def __init__(self, nome, endereco, situacao, data):
         self.nome = nome
@@ -59,10 +63,14 @@ class Aluno(db.Model):
     nascimento = db.Column(db.Date)
     genero = db.Column(db.String(1))
     aulas = db.relationship(
+<<<<<<< HEAD
         "Turma",
         secondary=aulas,
         backref=db.backref("estudantes"),
         lazy="dynamic",
+=======
+        "Turma", secondary=aulas, backref=db.backref("estudantes"), lazy="dynamic"
+>>>>>>> parent of d401368... Added relationships insertion
     )
 
     def __init__(self, nome, telefone, email, nascimento, genero):
@@ -142,6 +150,11 @@ def alunos():
         return render_template("alunos.html", alunos=alunos)
 
 
+# @app.route("/aulas.html")
+# def selecaulas():
+#    return render_template("aulas.html", turmas=turmas, aluno=aluno)
+
+
 @app.route("/delete/aluno/<int:id>")
 def deletealuno(id):
     try:
@@ -152,7 +165,7 @@ def deletealuno(id):
         "Ocorreu um erro"
 
 
-@app.route("/update/aluno/<int:id>", methods=["POST", "GET"])
+@app.route("/update/aluno/<int:id>",  methods=["POST", "GET"])
 def updatealuno(id):
     aluno = Aluno.query.get_or_404(id)
     if request.method == "POST":
@@ -182,7 +195,7 @@ def deleteturma(id):
         "Ocorreu um erro"
 
 
-@app.route("/update/turma/<int:id>", methods=["POST", "GET"])
+@app.route("/update/turma/<int:id>",  methods=["POST", "GET"])
 def updateturma(id):
     turma = Turma.query.get_or_404(id)
     if request.method == "POST":
@@ -241,6 +254,7 @@ def index():
     return render_template("index.html")
 
 
+<<<<<<< HEAD
 @app.route("/alunosbuscar.html", methods=["GET", "POST"])
 def alunosbuscar():
     if request.method == "POST":
@@ -304,5 +318,7 @@ def selectform(id):
         return redirect("/alunosbuscar.html")
 
 
+=======
+>>>>>>> parent of d401368... Added relationships insertion
 if __name__ == "__main__":
     app.run(debug=True)
