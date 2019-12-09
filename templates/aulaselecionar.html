@@ -6,7 +6,7 @@
 
 {% block body %}
 <div class="aulaselecionar">
-    <h1>Aulas da escola {{escola.nome}}:</h1>
+    <h1>Selecione as aulas da escola {{escola.nome}} que deseja matricular{{aluno.nome}}:</h1>
     <br>
     <form action="/formselect/{{aluno.id}}" method="POST">
         <table>
