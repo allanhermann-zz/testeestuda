@@ -24,9 +24,7 @@ class Escola(db.Model):
     endereco = db.Column(db.String(90))
     situacao = db.Column(db.String(45), nullable=True)
     data = db.Column(db.Integer, nullable=True)
-    turmas = db.relationship(
-        "Turma", backref="escola", lazy="dynamic"
-    )
+    turmas = db.relationship("Turma", backref="escola", cascade="all, delete-orphan", lazy="dynamic")
 
     def __init__(self, nome, endereco, situacao, data):
         self.nome = nome
@@ -59,10 +57,7 @@ class Aluno(db.Model):
     nascimento = db.Column(db.Date)
     genero = db.Column(db.String(1))
     aulas = db.relationship(
-        "Turma",
-        secondary=aulas,
-        backref=db.backref("estudantes"),
-        lazy="dynamic",
+        "Turma", secondary=aulas, backref=db.backref("estudantes", cascade="all, delete-orphan"), lazy="dynamic"
     )
 
     def __init__(self, nome, telefone, email, nascimento, genero):
@@ -288,7 +283,7 @@ def aulaselecionar():
 
 @app.route("/formselect/<int:id>", methods=["GET", "POST"])
 def selectform(id):
-    if request.method == "POST":
+    if request.method=="POST":
         aluno = Aluno.query.get_or_404(id)
         todasaulas = request.form.getlist("class")
         for aula in todasaulas:
