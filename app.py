@@ -1,8 +1,32 @@
 # coding=utf8
-
 from flask import Flask, render_template, url_for, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+import json, requests
+from sqlalchemy_utils import create_database
+
+try:
+    from app import db, engine, Escola
+    
+    create_database(engine)
+
+    db.create_all()
+
+    dados = requests.get("http://educacao.dadosabertosbr.com/api/escolas/buscaavancada?estado=MT")
+
+    dadosjson=dados.json()[1]
+
+    for jsoncode in range(len(dadosjson)):
+        nome = dadosjson[jsoncode]["nome"]
+        endereco = dadosjson[jsoncode]["cidade"]+", "+dadosjson[jsoncode]["estado"]
+        situacao = dadosjson[jsoncode]["situacaoFuncionamentoTxt"]
+        data = dadosjson[jsoncode]["anoCenso"]
+        var = Escola(nome = nome, endereco = endereco, situacao = situacao, data = data)
+        db.session.add(var)
+        db.session.commit()
+except: 
+    pass
+
 
 engine = "mysql://root:root@localhost/school"
 app = Flask(__name__)
@@ -20,7 +44,7 @@ aulas = db.Table(
 
 class Escola(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    nome = db.Column(db.String(45))
+    nome = db.Column(db.String(200))
     endereco = db.Column(db.String(90))
     situacao = db.Column(db.String(45), nullable=True)
     data = db.Column(db.Integer, nullable=True)
