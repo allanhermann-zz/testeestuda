@@ -6,8 +6,16 @@
 
 {% block body %}
 <div class="escola">
+    {% if verif == 1 %}
+    <h1>Nenhuma escola encontrada</h1>
+    <br><br>
+    {% endif %}
     {% if escolas|length < 1 %}
-    <h2>Não há Escolas cadastrados.</h2>
+    <h2>Digite o nome da escola que deseja buscar.</h2>
+    <form action="/escolas.html" method="POST">
+        <input type="text" name='nome' id="nome" placeholder="Nome da Escola"><br>
+        <input type="submit" name="action" value="Buscar Escola">
+    </form>
     {%  else %}
     <h1>Dados</h1>
     <table>
@@ -27,8 +35,17 @@
             <td>{{escola.situacao}}</td>
             <td>{{escola.data}}</td>
             <td>
-                <a href="/delete/escola/{{escola.id}}">Deletar</a>
+                <form action="/escolas.html" method="POST">
+                    <input type="hidden" name="id" value="{{ escola.id }}" readonly>
+                    <input type="submit" name="action" value="Remover Escola">
+                </form>
                 <br>
+                <!--
+                <form action="/escolas.html" method="POST">
+                    <input type="hidden" name="id" value="{{ escola.id }}">
+                    <input type="submit" name="action" value="Atualizar Escola">
+                </form>
+                -->
                 <a href="/update/escola/{{escola.id}}">Editar</a>
                 <br>
                 <a href="https://www.google.com.br/maps/place/{{escola.endereco}}" target="blank">Encontrar no mapa</a>
@@ -36,16 +53,18 @@
         </tr>
         {% endfor %}
     </table>
+    <br><a href="escolas.html" method="GET">Buscar nova escola</a>
     {%  endif %}
-
+    <br><br>
+    <h2>Cadastrar nova escola</h2>
     <form action="/escolas.html" method="POST">
-        <input type="text" name="nome" id="nome" value="Nome">
-        <input type="text" name="endereco" id="tel" value="Endereço">
-        <input type="text" name="situacao" id="email" value="Situação">
-        <input type="text" name="data" id="data" value="Ano">
-        <input type="submit" value="Enviar Dados">
+        <input type="text" name="nome" id="nome" placeholder="Nome"><br>
+        <input type="text" name="endereco" id="tel" placeholder="Endereço"><br>
+        <input type="text" name="situacao" id="email" placeholder="Situação"><br>
+        <input type="text" name="data" id="data" placeholder="Ano"><br>
+        <input type="submit" name="action" value="Enviar Dados">
     </form>
     <br><br><br>
-    <a href="index.html">Retornar à HomePage</a>
+    <a href="/">Retornar à HomePage</a>
 </div>
 {% endblock %}

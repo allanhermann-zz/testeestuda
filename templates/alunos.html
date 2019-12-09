@@ -6,9 +6,17 @@
 
 {% block body %}
 <div class="alunos">
+    {% if verif == 1 %}
+    <h1>Nenhum aluno encontrado</h1>
+    <br><br>
+    {% endif %}
     {% if alunos|length < 1 %}
-    <h2>Não há alunos cadastrados.</h2>
-    {%  else %}
+    <h2>Digite o nome do aluno que deseja buscar.</h2>
+    <form action="/alunos.html" method="POST">
+        <input type="text" name='nome' id="nome" placeholder="Nome do Aluno"><br>
+        <input type="submit" name="action" value="Buscar Aluno">
+    </form>
+    {% else %}
     <h1>Dados</h1>
     <table>
         <tr>
@@ -29,24 +37,35 @@
             <td>{{aluno.nascimento}}</td>
             <td>{{aluno.genero}}</td>
             <td>
-                <a href="/delete/aluno/{{aluno.id}}">Deletar</a>
+                <form action="/alunos.html" method="POST">
+                    <input type="hidden" name="id" value="{{ aluno.id }}" readonly>
+                    <input type="submit" name="action" value="Remover Aluno">
+                </form>
                 <br>
                 <a href="/update/aluno/{{aluno.id}}">Editar</a>
+                <!--
+                <form action="/alunos.html" method="POST">
+                    <input type="hidden" name="id" value="{{ aluno.id }}">
+                    <input type="submit" name="action" value="Atualizar Aluno">
+                </form>
+                -->
             </td>
         </tr>
         {% endfor %}
     </table>
+    <br><a href="alunos.html" method="GET">Buscar novo aluno</a>
     {%  endif %}
+    <h2>Cadastrar novo aluno</h2>
     <form action="/alunos.html" method="POST">
-        <input type="text" name="nome" id="nome" value="Nome">
-        <input type="text" name="tel" id="tel" value=Telefone>
-        <input type="text" name="email" id="email" value="Email">
-        <input type="text" name="born" id="born" value="Nascimento">
-        <input type="text" name="genre" id="genre" value="Genero">
-        <input type="submit" value="Enviar Dados">
+        <input type="text" name="nome" id="nome" placeholder="Nome"><br>
+        <input type="text" name="tel" id="tel" placeholder=Telefone><br>
+        <input type="text" name="email" id="email" placeholder="Email"><br>
+        <input type="text" name="nascimento" id="nascimento" placeholder="Nascimento"><br>
+        <input type="text" name="genero" id="genero" placeholder="Genero"><br>
+        <input type="submit" name="action" value="Enviar Dados">
     </form>
     <br><br><br>
-    <a href="index.html">Retornar à HomePage</a>
+    <a href="/">Retornar à HomePage</a>
 
 </div>
 {% endblock %}
