@@ -24,7 +24,7 @@ class Escola(db.Model):
     endereco = db.Column(db.String(90))
     situacao = db.Column(db.String(45), nullable=True)
     data = db.Column(db.Integer, nullable=True)
-    turmas = db.relationship("Turma", backref="escola", lazy="dynamic")
+    turmas = db.relationship("Turma", backref="escola", cascade="all, delete-orphan", lazy="dynamic")
 
     def __init__(self, nome, endereco, situacao, data):
         self.nome = nome
@@ -57,7 +57,7 @@ class Aluno(db.Model):
     nascimento = db.Column(db.Date)
     genero = db.Column(db.String(1))
     aulas = db.relationship(
-        "Turma", secondary=aulas, backref=db.backref("estudantes"), lazy="dynamic"
+        "Turma", secondary=aulas, backref=db.backref("estudantes", cascade="all, delete-orphan"), lazy="dynamic"
     )
 
     def __init__(self, nome, telefone, email, nascimento, genero):
@@ -137,11 +137,6 @@ def alunos():
         return render_template("alunos.html", alunos=alunos)
 
 
-# @app.route("/aulas.html")
-# def selecaulas():
-#    return render_template("aulas.html", turmas=turmas, aluno=aluno)
-
-
 @app.route("/delete/aluno/<int:id>")
 def deletealuno(id):
     try:
@@ -152,7 +147,7 @@ def deletealuno(id):
         "Ocorreu um erro"
 
 
-@app.route("/update/aluno/<int:id>",  methods=["POST", "GET"])
+@app.route("/update/aluno/<int:id>", methods=["POST", "GET"])
 def updatealuno(id):
     aluno = Aluno.query.get_or_404(id)
     if request.method == "POST":
@@ -182,7 +177,7 @@ def deleteturma(id):
         "Ocorreu um erro"
 
 
-@app.route("/update/turma/<int:id>",  methods=["POST", "GET"])
+@app.route("/update/turma/<int:id>", methods=["POST", "GET"])
 def updateturma(id):
     turma = Turma.query.get_or_404(id)
     if request.method == "POST":
@@ -239,6 +234,69 @@ def basic():
 @app.route("/index.html")
 def index():
     return render_template("index.html")
+
+
+@app.route("/alunosbuscar.html", methods=["GET", "POST"])
+def alunosbuscar():
+    if request.method == "POST":
+        alunodados = request.form
+        nome = alunodados["nome"]
+        aluno = Aluno.query.filter(Aluno.nome.like("%" + nome + "%")).all()
+        return render_template("alunosbuscar.html", alunos=aluno)
+    else:
+        return render_template("alunosbuscar.html")
+
+
+@app.route("/alunobuscar/<int:id>")
+def alunobuscarid(id):
+    aluno = Aluno.query.get_or_404(id)
+    return render_template("escolabuscar.html", aluno=aluno)
+
+
+@app.route("/escolabuscar.html", methods=["GET", "POST"])
+def escolabuscar():
+    if request.method == "POST":
+        dados = request.form
+        nome = dados["nome"]
+        aluno = Aluno.query.get_or_404(dados["alid"])
+        escola = Escola.query.filter(Escola.nome.like("%" + nome + "%")).all()
+        return render_template("escolabuscar.html", escolas=escola, aluno=aluno)
+    else:
+        return render_template("escolabuscar.html", aluno=aluno)
+
+
+@app.route("/escolabuscar/<int:ida>/<int:idb>")
+def turmasexibir(ida, idb):
+    aluno = Aluno.query.get_or_404(ida)
+    escola = Escola.query.get_or_404(idb)
+    turmas = Turma.query.filter_by(escola_id=idb).all()
+    return render_template(
+        "aulaselecionar.html", aluno=aluno, escola=escola, turmas=turmas
+    )
+
+
+@app.route("/aulaselecionar.html")
+def aulaselecionar():
+    return render_template(
+        "aulaselecionar.html", aluno=aluno, escola=escola, turmas=turmas
+    )
+
+
+@app.route("/formselect/<int:id>", methods=["GET", "POST"])
+def selectform(id):
+    if request.method=="POST":
+        aluno = Aluno.query.get_or_404(id)
+        todasaulas = request.form.getlist("class")
+        for aula in todasaulas:
+            try:
+                turmas = Turma.query.get_or_404(aula)
+                turmas.estudantes.append(aluno)
+                db.session.commit()
+            except:
+                "Um erro ocorreu"
+        return redirect("/alunosbuscar.html")
+    else:
+        return redirect("/alunosbuscar.html")
 
 
 if __name__ == "__main__":
