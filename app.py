@@ -24,13 +24,9 @@ class Escola(db.Model):
     endereco = db.Column(db.String(90))
     situacao = db.Column(db.String(45), nullable=True)
     data = db.Column(db.Integer, nullable=True)
-<<<<<<< HEAD
     turmas = db.relationship(
         "Turma", backref="escola", lazy="dynamic"
     )
-=======
-    turmas = db.relationship("Turma", backref="escola", lazy="dynamic")
->>>>>>> parent of d401368... Added relationships insertion
 
     def __init__(self, nome, endereco, situacao, data):
         self.nome = nome
