@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Estuda.com</title>
+{% endblock %}
+
+{% block body %}
+<div class="alunosturmas">
+    {% if verif == 1 %}
+    <h1>Nenhum aluno encontrado</h1>
+    <br><br>
+    {% endif %}
+    {% if alunos|length < 1 %}
+    <h2>Digite o nome do aluno que deseja matricular na matéria selecionada</h2>
+    <form action="/alunosturmas.html" method="POST">
+        <input type="text" name='nome' id="nome" placeholder="Nome do Aluno"><br>
+        <input type="hidden" name="turmaid" value="{{ turma }}" >
+        <input type="submit" name="action" value="Buscar Aluno">
+    </form>
+    {% else %}
+    <h1>Dados</h1>
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Nome</th>
+            <th>Telefone</th>
+            <th>Email</th>
+            <th>Nascimento</th>
+            <th>Gênero</th>
+            <th>Ações</th>
+        </tr>
+        {% for aluno in alunos %}
+        <tr>
+            <td>{{aluno.id}}</td>
+            <td>{{aluno.nome}}</td>
+            <td>{{aluno.telefone}}</td>
+            <td>{{aluno.email}}</td>
+            <td>{{aluno.nascimento}}</td>
+            <td>{{aluno.genero}}</td>
+            <td>
+                <form action="/alunosturmas.html" method="POST">
+                    <input type="hidden" name="alunoid" value="{{ aluno.id }}" readonly>
+                    <input type="hidden" name="turmaid" value="{{ turma }}" >
+                    <input type="submit" name="action" value="Matricular Aluno">
+                </form>
+                <br>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <br><a href="alunosturmas.html" method="GET">Buscar novo aluno</a>
+    {%  endif %}
+    <br><br><br>
+    <a href="/">Retornar à Home Page</a>
+
+</div>
+{% endblock %}

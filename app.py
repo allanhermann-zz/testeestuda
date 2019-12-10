@@ -95,6 +95,7 @@ class Aluno(db.Model):
         self.genero = genero
 
 
+########################--ESCOLAS--####################
 @app.route("/escolas.html", methods=["POST", "GET"])
 def escolas():
     escoladados = request.form
@@ -128,9 +129,13 @@ def escolas():
             try:
                 db.session.delete(Escola.query.get_or_404(escoladados["id"]))
                 db.session.commit()
-                return "<h1>Escola removida</h1> <br><a href='index.html'> Retornar à HomePage </a>"
+                return (
+                    "<h1>Escola removida</h1> <br><a href='/'> Retornar à HomePage </a>"
+                )
             except:
-                return "<h1>Ocorreu um erro</h1> <br><a href='index.html'> Retornar à HomePage </a>"
+                return (
+                    "<h1>Ocorreu um erro</h1> <br><a href='/'> Retornar à HomePage </a>"
+                )
         elif escoladados["action"] == "Atualizar Escola":
             return render_template("escolas.html", verif=0)
     else:
@@ -156,38 +161,66 @@ def updateescola(id):
         return render_template("updateescola.html", escola=escola)
 
 
+#########################--TURMAS--####################
 @app.route("/turmas.html", methods=["POST", "GET"])
 def turmas():
     turmadados = request.form
     if request.method == "POST":
-        nivel = turmadados["nivel"]
-        ano = turmadados["ano"]
-        serie = turmadados["serie"]
-        turno = turmadados["turno"]
-        escola = Escola.query.filter_by(nome=turmadados["escola"]).first()
-        nova_turma = Turma(
-            nivel=nivel, ano=ano, serie=serie, turno=turno, escola=escola
-        )
-        try:
-            db.session.add(nova_turma)
-            db.session.commit()
-            return redirect("/turmas.html")
-        except:
-            return "Erro durante a Inserção, cheque seus dados"
+        if turmadados["action"] == "Buscar Escola":
+            escolas = Escola.query.filter(
+                Escola.nome.like("%" + turmadados["nome"] + "%")
+            ).all()
+            if escolas:
+                verif = 0
+            else:
+                verif = 1
+            return render_template("turmas.html", escolas=escolas, verif=verif)
+        elif turmadados["action"] == "Selecionar Escola":
+            escola = Escola.query.get_or_404(turmadados["id"])
+            turmas = Turma.query.filter_by(escola=escola).all()
+            if turmas:
+                verifa = 0
+            else:
+                verifa = 1
+            return render_template(
+                "turmas.html", turmas=turmas, verifa=verifa, escola=escola
+            )
+        elif turmadados["action"] == "Remover Turma":
+            try:
+                db.session.delete(Turma.query.get_or_404(turmadados["id"]))
+                db.session.commit()
+                return (
+                    "<h1>Turma removida</h1> <br><a href='/'> Retornar à HomePage </a>"
+                )
+            except:
+                return (
+                    "<h1>Ocorreu um erro</h1> <br><a href='/'> Retornar à HomePage </a>"
+                )
+        elif turmadados["action"] == "Atualizar turma":
+            return render_template("turmas.html", verif=0)
+        elif turmadados["action"] == "Cadastrar Turma":
+            nivel = turmadados["nivel"]
+            ano = turmadados["ano"]
+            serie = turmadados["serie"]
+            turno = turmadados["turno"]
+            escola = Escola.query.filter_by(nome=turmadados["escola"]).first()
+            nova_turma = Turma(
+                nivel=nivel, ano=ano, serie=serie, turno=turno, escola=escola
+            )
+            turmas = Turma.query.filter_by(escola=escola).all()
+            try:
+                db.session.add(nova_turma)
+                db.session.commit()
+                return render_template(
+                    "/turmas.html", turmas=turmas, escola=escola, verif=0, verifa=0
+                )
+            except:
+                return "Erro durante a Inserção, cheque seus dados"
+        elif turmadados["action"] == "Cadastrar Alunos":
+            return render_template("/alunosturmas.html", turma=turmadados["id"])
 
     else:
-        turmas = Turma.query.order_by(Turma.id).all()
-        return render_template("turmas.html", turmas=turmas)
-
-
-@app.route("/delete/turma/<int:id>")
-def deleteturma(id):
-    try:
-        db.session.delete(Turma.query.get_or_404(id))
-        db.session.commit()
-        return redirect("/turmas.html")
-    except:
-        "Ocorreu um erro"
+        return render_template("turmas.html", verif=0, verifa=0)
 
 
 @app.route("/update/turma/<int:id>", methods=["POST", "GET"])
@@ -208,6 +241,9 @@ def updateturma(id):
 
     else:
         return render_template("updateturma.html", turma=turma)
+
+
+#########################--ALUNOS--####################
 
 
 @app.route("/alunos.html", methods=["POST", "GET"])
@@ -278,67 +314,36 @@ def updatealuno(id):
         return render_template("updatealuno.html", aluno=aluno)
 
 
-@app.route("/alunosbuscar.html", methods=["GET", "POST"])
-def alunosbuscar():
+##################--REL ALUNOS X TURMAS--##############
+@app.route("/alunosturmas.html", methods=["GET", "POST"])
+def matricula():
+    alunoturma = request.form
     if request.method == "POST":
-        alunodados = request.form
-        nome = alunodados["nome"]
-        aluno = Aluno.query.filter(Aluno.nome.like("%" + nome + "%")).all()
-        return render_template("alunosbuscar.html", alunos=aluno)
-    else:
-        return render_template("alunosbuscar.html")
+        turma = alunoturma["turmaid"]
+        if alunoturma["action"] == "Buscar Aluno":
+            alunos = Aluno.query.filter(
+                Aluno.nome.like("%" + alunoturma["nome"] + "%")
+            ).all()
+            if alunos:
+                verif = 0
+            else:
+                verif = 1
+            return render_template(
+                "alunosturmas.html", turma=turma, alunos=alunos, verif=verif
+            )
 
-
-@app.route("/alunobuscar/<int:id>")
-def alunobuscarid(id):
-    aluno = Aluno.query.get_or_404(id)
-    return render_template("escolabuscar.html", aluno=aluno)
-
-
-@app.route("/escolabuscar.html", methods=["GET", "POST"])
-def escolabuscar():
-    if request.method == "POST":
-        dados = request.form
-        nome = dados["nome"]
-        aluno = Aluno.query.get_or_404(dados["alid"])
-        escola = Escola.query.filter(Escola.nome.like("%" + nome + "%")).all()
-        return render_template("escolabuscar.html", escolas=escola, aluno=aluno)
-    else:
-        return render_template("escolabuscar.html", aluno=aluno)
-
-#########################################################
-@app.route("/escolabuscar/<int:ida>/<int:idb>")
-def turmasexibir(ida, idb):
-    aluno = Aluno.query.get_or_404(ida)
-    escola = Escola.query.get_or_404(idb)
-    turmas = Turma.query.filter_by(escola_id=idb).all()
-    return render_template(
-        "aulaselecionar.html", aluno=aluno, escola=escola, turmas=turmas
-    )
-
-
-@app.route("/aulaselecionar.html")
-def aulaselecionar():
-    return render_template(
-        "aulaselecionar.html", aluno=aluno, escola=escola, turmas=turmas
-    )
-
-
-@app.route("/formselect/<int:id>", methods=["GET", "POST"])
-def selectform(id):
-    if request.method == "POST":
-        aluno = Aluno.query.get_or_404(id)
-        todasaulas = request.form.getlist("class")
-        for aula in todasaulas:
+        elif alunoturma["action"] == "Matricular Aluno":
+            turmas = Turma.query.get_or_404(alunoturma["turmaid"])
+            aluno = Aluno.query.get_or_404(alunoturma["alunoid"])
             try:
-                turmas = Turma.query.get_or_404(aula)
                 turmas.estudantes.append(aluno)
                 db.session.commit()
+                return render_template("alunosturmas.html", turma=turma)
             except:
-                "Um erro ocorreu"
-        return redirect("/alunosbuscar.html")
+                return "Um erro ocorreu"
     else:
-        return redirect("/alunosbuscar.html")
+        return render_template("alunosturmas.html", turma=turma)
+
 
 ###########################################################
 @app.route("/")

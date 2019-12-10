@@ -6,9 +6,63 @@
 
 {% block body %}
 <div class="turma">
-    {% if turmas|length < 1 %}
-    <h2>Não há turmas cadastrados.</h2>
-    {%  else %}
+    {% if verif == 1 %}
+    <h1>Nenhuma escola encontrada</h1>
+    <br><br>
+    {% endif %}
+    {% if verifa == 1 %}
+    <h1>Nenhuma turma encontrada</h1>
+    <br><br><br>
+    <h2>Cadastrar nova turma</h2>
+    <form action="/turmas.html" method="POST">
+        <input type="text" name="nivel" id="nivel" placeholder="nivel">
+        <input type="text" name="ano" id="ano" placeholder="ano">
+        <input type="text" name="serie" id="serie" placeholder="serie">
+        <input type="text" name="turno" id="turno" placeholder="turno">
+        <input type="text" name="escola" id="escola" value="{{escola.nome}}" readonly>
+        <input type="submit" name="action" value="Cadastrar Turma">
+    </form>
+    <br><br>
+    {% endif %}
+    
+    {% if escolas|length < 1 and turmas|length < 1 %}
+    <h2>Digite o nome da escola que deseja buscar a turma</h2>
+    <form action="/turmas.html" method="POST">
+        <input type="text" name='nome' id="nome" placeholder="Nome da Escola"><br>
+        <input type="submit" name="action" value="Buscar Escola">
+    </form>
+    {% endif %}
+    {% if escolas|length > 0 and turmas|length < 1 %}
+    <h1>Dados</h1>
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Nome</th>
+            <th>Endereço</th>
+            <th>Situação</th>
+            <th>Data</th>
+            <th>Ações</th>
+        </tr>
+        {% for escola in escolas %}
+        <tr>
+            <td>{{escola.id}}</td>
+            <td>{{escola.nome}}</td>
+            <td>{{escola.endereco}}</td>
+            <td>{{escola.situacao}}</td>
+            <td>{{escola.data}}</td>
+            <td>
+                <form action="/turmas.html" method="POST">
+                    <input type="hidden" name="id" value="{{ escola.id }}" readonly>
+                    <input type="submit" name="action" value="Selecionar Escola">
+                </form>
+                <br>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <br><a href="turmas.html" method="GET">Buscar novas escolas</a><br>
+    {% endif %}
+    {%  if turmas|length > 0 %}
     <h1>Dados</h1>
     <table>
         <tr>
@@ -29,25 +83,35 @@
             <td>{{turma.turno}}</td>
             <td>{{turma.escola.nome}}</td>
             <td>
-                <a href="/delete/turma/{{turma.id}}">Deletar</a>
-                <br>
+                <form action="/turmas.html" method="POST">
+                    <input type="hidden" name="id" value="{{ turma.id }}" readonly>
+                    <input type="submit" name="action" value="Remover Turma">
+                </form>
+                
+                <form action="/turmas.html" method="POST">
+                    <input type="hidden" name="id" value="{{ turma.id }}">
+                    <input type="submit" name="action" value="Cadastrar Alunos">
+                </form>
+    
                 <a href="/update/turma/{{turma.id}}">Editar</a>
+                
             </td>
         </tr>
         {% endfor %}
     </table>
-    {%  endif %}
+    <br><br><br>
+    <h2>Cadastrar nova turma</h2>
     <form action="/turmas.html" method="POST">
-        <input type="text" name="nivel" id="nivel">
-        <input type="text" name="ano" id="ano">
-        <input type="text" name="serie" id="serie">
-        <input type="text" name="turno" id="turno">
-        <input type="text" name="escola" id="escola">
-        <input type="submit" value="Enviar Dados">
+        <input type="text" name="nivel" id="nivel" placeholder="nivel">
+        <input type="text" name="ano" id="ano" placeholder="ano">
+        <input type="text" name="serie" id="serie" placeholder="serie">
+        <input type="text" name="turno" id="turno" placeholder="turno">
+        <input type="text" name="escola" id="escola" value="{{escola.nome}}" readonly>
+        <input type="submit" name="action" value="Cadastrar Turma">
     </form>
-    <br>
-    <br>
-    <br>
-    <a href="index.html">Retornar à HomePage</a>
+    <br><a href="turmas.html" method="GET">Buscar nova escola</a>
+    {%  endif %}
+    <br><br><br>
+    <a href="/">Retornar à Home Page</a>
 </div>
 {% endblock %}
