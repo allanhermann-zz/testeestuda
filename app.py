@@ -42,6 +42,7 @@ aulas = db.Table(
     "aulas",
     db.Column("aluno_id", db.Integer, db.ForeignKey("aluno.id")),
     db.Column("turma_id", db.Integer, db.ForeignKey("turma.id")),
+    db.UniqueConstraint('aluno_id', 'turma_id', name='uniqueTurma'),
 )
 
 
@@ -52,6 +53,9 @@ class Escola(db.Model):
     situacao = db.Column(db.String(45), nullable=True)
     data = db.Column(db.Integer, nullable=True)
     turmas = db.relationship("Turma", backref="escola", lazy="dynamic")
+    __table_args__ = (
+        db.UniqueConstraint('nome', 'endereco', name='duplaEscola'),
+    )
 
     def __init__(self, nome, endereco, situacao, data):
         self.nome = nome
@@ -86,6 +90,9 @@ class Aluno(db.Model):
     aulas = db.relationship(
         "Turma", secondary=aulas, backref=db.backref("estudantes"), lazy="dynamic"
     )
+    __table_args__ = (
+        db.UniqueConstraint('nome', 'nascimento','email', name='uniqueAluno'),
+    )
 
     def __init__(self, nome, telefone, email, nascimento, genero):
         self.nome = nome
@@ -111,9 +118,9 @@ def escolas():
             try:
                 db.session.add(nova_escola)
                 db.session.commit()
-                return redirect("/")
+                return redirect("/escolas.html")
             except:
-                return "Erro durante a Inserção, cheque seus dados"
+                return redirect("/")
 
         elif escoladados["action"] == "Buscar Escola":
             escolas = Escola.query.filter(
@@ -129,9 +136,9 @@ def escolas():
             try:
                 db.session.delete(Escola.query.get_or_404(escoladados["id"]))
                 db.session.commit()
-                return redirect("/")
+                return redirect("/escolas.html")
             except:
-                return "Ocorreu um erro, cheque seus dados"
+                return redirect("/")
 
         elif escoladados["action"] == "Atualizar":
             return render_template("escolas.html", verif=0)
@@ -150,9 +157,9 @@ def updateescola(id):
         escola.data = escoladados["data"]
         try:
             db.session.commit()
-            return redirect("../../escolas.html")
+            return redirect("/escolas.html")
         except:
-            return "Erro durante a Atualização, cheque seus dados"
+            return redirect("/")
 
     else:
         return render_template("updateescola.html", escola=escola)
@@ -182,17 +189,14 @@ def turmas():
             return render_template(
                 "turmas.html", turmas=turmas, verifa=verifa, escola=escola
             )
-        elif turmadados["action"] == "Remover Turma":
+        elif turmadados["action"] == "Remover":
             try:
                 db.session.delete(Turma.query.get_or_404(turmadados["id"]))
                 db.session.commit()
-                return (
-                    "<h1>Turma removida</h1> <br><a href='/'> Retornar à HomePage </a>"
-                )
+                return render_template("turmas.html")
             except:
-                return (
-                    "<h1>Ocorreu um erro</h1> <br><a href='/'> Retornar à HomePage </a>"
-                )
+                return redirect("/")
+
         elif turmadados["action"] == "Atualizar turma":
             return render_template("turmas.html", verif=0)
         elif turmadados["action"] == "Cadastrar Turma":
@@ -212,8 +216,9 @@ def turmas():
                     "/turmas.html", turmas=turmas, escola=escola, verif=0, verifa=0
                 )
             except:
-                return "Erro durante a Inserção, cheque seus dados"
-        elif turmadados["action"] == "Cadastrar Alunos":
+                return redirect("/")
+
+        elif turmadados["action"] == "Matricular Alunos":
             return render_template("/alunosturmas.html", turma=turmadados["id"])
 
     else:
@@ -232,9 +237,9 @@ def updateturma(id):
         turma.escola = Escola.query.filter_by(nome=turmadados["escola"]).first()
         try:
             db.session.commit()
-            return redirect("../../turmas.html")
+            return redirect("/turmas.html")
         except:
-            return "Erro durante a Atualização, cheque seus dados"
+            return redirect("/")
 
     else:
         return render_template("updateturma.html", turma=turma)
@@ -251,7 +256,7 @@ def alunos():
             nome = alunodados["nome"]
             tel = alunodados["tel"]
             email = alunodados["email"]
-            nascimento = datetime.strptime(alunodados["nascimento"], "%d-%m-%Y")
+            nascimento = datetime.strptime(alunodados["nascimento"], "%Y-%m-%d")
             genero = alunodados["genero"]
             novo_aluno = Aluno(
                 nome=nome,
@@ -265,7 +270,7 @@ def alunos():
                 db.session.commit()
                 return render_template("/alunos.html", verif=0)
             except:
-                return "Erro durante a Inserção, cheque seus dados"
+                return redirect("/")
         elif alunodados["action"] == "Buscar Aluno":
             alunos = Aluno.query.filter(
                 Aluno.nome.like("%" + alunodados["nome"] + "%")
@@ -276,15 +281,14 @@ def alunos():
                 verif = 1
             return render_template("alunos.html", alunos=alunos, verif=verif)
 
-        elif alunodados["action"] == "Remover Aluno":
+        elif alunodados["action"] == "Remover":
             try:
                 db.session.delete(Aluno.query.get_or_404(alunodados["id"]))
                 db.session.commit()
-                return "<h1>Aluno(a) removido(a)</h1> <br><a href='/'> Retornar à HomePage </a>"
+                return redirect("/alunos.html")
             except:
-                return (
-                    "<h1>Ocorreu um erro</h1> <br><a href='/'> Retornar à HomePage </a>"
-                )
+                return redirect("/")
+
         elif alunodados["action"] == "Atualizar Aluno":
             return render_template("alunos.html", verif=0)
     else:
@@ -299,13 +303,13 @@ def updatealuno(id):
         aluno.nome = alunodados["nome"]
         aluno.telefone = alunodados["tel"]
         aluno.email = alunodados["email"]
-        aluno.nascimento = alunodados["born"]
-        aluno.genero = alunodados["genre"]
+        aluno.nascimento = alunodados["nascimento"]
+        aluno.genero = alunodados["genero"]
         try:
             db.session.commit()
-            return redirect("../../alunos.html")
+            return redirect("/alunos.html")
         except:
-            return "Erro durante a Atualização, cheque seus dados"
+            return redirect("/")
 
     else:
         return render_template("updatealuno.html", aluno=aluno)
@@ -317,7 +321,7 @@ def matricula():
     alunoturma = request.form
     if request.method == "POST":
         turma = alunoturma["turmaid"]
-        if alunoturma["action"] == "Buscar Aluno":
+        if alunoturma["action"] == "Buscar Aluno(a)":
             alunos = Aluno.query.filter(
                 Aluno.nome.like("%" + alunoturma["nome"] + "%")
             ).all()
@@ -329,7 +333,7 @@ def matricula():
                 "alunosturmas.html", turma=turma, alunos=alunos, verif=verif
             )
 
-        elif alunoturma["action"] == "Matricular Aluno":
+        elif alunoturma["action"] == "Matricular Aluno(a)":
             turmas = Turma.query.get_or_404(alunoturma["turmaid"])
             aluno = Aluno.query.get_or_404(alunoturma["alunoid"])
             try:
@@ -337,7 +341,10 @@ def matricula():
                 db.session.commit()
                 return render_template("alunosturmas.html", turma=turma)
             except:
-                return "Um erro ocorreu"
+                return redirect("/")
+        
+        elif alunoturma["action"] == "Buscar novo aluno(a)":
+            return render_template("alunosturmas.html",turma=turma)
     else:
         return render_template("alunosturmas.html", turma=turma)
 

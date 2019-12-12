@@ -6,16 +6,53 @@
 
 {% block body %}
 <div class="turmaupdate">
-    <h1>Dados</h1>
-    <form action="/update/turma/{{turma.id}}" method="POST">
-        <input type="text" name="nivel" id="nivel" value={{turma.nivel}}>
-        <input type="text" name="ano" id="ano" value={{turma.ano}}>
-        <input type="text" name="serie" id="serie" value={{turma.serie}}>
-        <input type="text" name="turno" id="turno" value={{turma.turno}}>
-        <input type="text" name="escola" id="escola" value={{turma.escola.nome}}>
-        <input type="submit" value="Enviar Dados">
-    </form>
     <br><br><br>
-    <a href="../../index.html">Retornar à HomePage</a>
+    <div class="row">
+        <div class="col text-center pt-4">
+            <h2>Altere os dados que desejar:</h2>
+        </div>
+        <div class="col form-row justify-content-start">
+            <form action="/update/turma/{{turma.id}}" method="POST">
+                <div class="row">
+                    <div class="my-1">
+                        <label class="mr-sm-2 font-weight-bold" for="nivelForm"> Nível do Ensino </label>
+                        <select required class="custom-select mr-sm-2 pr-3" id="nivelForm" name="nivel">
+                            <option value="Fundamental">Fundamental</option>
+                            <option value="Médio">Médio</option>
+                            <option value="Superior">Superior</option>
+                        </select>
+                    </div>
+                    <div class="mx-1 mt-1 ml-3">
+                        <label class="font-weight-bold" for="data">Ano de oferta:</label>
+                        <input class="form-control ml-3 w-50" type="text" name="ano" id="ano" value={{turma.ano}}>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="my-1">
+                        <label class="mr-sm-2 font-weight-bold" for=" turnoForm"> Turno das Aulas </label>
+                        <select class="custom-select mr-sm-2" id="turnoForm" name="turno" required>
+                            <option value="Matutino">Matutino</option>
+                            <option value="Vespertino">Vespertino</option>
+                            <option value="Noturno">Noturno</option>
+                            <option value="Integral">Integral</option>
+                        </select>
+                    </div>
+                    <div class="mx-1 mt-1 ml-3">
+                        <label class="font-weight-bold ml-3" for="data">Série</label>
+                        <input class="form-control ml-3 w-50 pr-3" type="text" name="serie" id="serie"
+                            value={{turma.serie}}>
+                        <small class="form-text text-muted">Insira a série em números</small>
+                    </div>
+                </div>
+                <div class="row">
+                    <input class="form-control text-muted" type="hidden" name="escola" id="escola"
+                        value="{{turma.escola.nome}}" readonly>
+                    <input class="btn btn-primary mb-2" type="submit" name="action" value="Cadastrar Turma">
+                </div>
+            </form>
+        </div>
+    </div>
+    <br><br><br>
+
 </div>
 {% endblock %}

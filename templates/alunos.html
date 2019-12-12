@@ -1,71 +1,142 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<title>Estuda.com</title>
+<title>Gerenciamento de Alunos</title>
 {% endblock %}
 
 {% block body %}
-<div class="alunos">
+
+<div class="col-12">
     {% if verif == 1 %}
-    <h1>Nenhum aluno encontrado</h1>
+    <br><br>
+    <h1 class="text-center">Nenhum aluno(a) encontrado(a)</h1>
     <br><br>
     {% endif %}
     {% if alunos|length < 1 %}
-    <h2>Digite o nome do aluno que deseja buscar.</h2>
-    <form action="/alunos.html" method="POST">
-        <input type="text" name='nome' id="nome" placeholder="Nome do Aluno"><br>
-        <input type="submit" name="action" value="Buscar Aluno">
-    </form>
+    <br><br>
+    <div class="col-12 text-center mb-5">
+        <h3>Busca de Alunos</h2>
+            <small class="form-text text-muted pb-2">Digite o nome completo, parte do nome do Aluno ou deixe em branco
+                para listar
+                todos</small>
+            <form class="form-inline justify-content-center" action="/alunos.html" method="POST">
+                <input type="text" name="nome" class="form-control w-50" id="buscaAluno" placeholder="Nome do Aluno">
+                <input type="submit" class="ml-1 mt-2 btn btn-primary mb-2" name="action" value="Buscar Aluno">
+            </form>
+    </div>
     {% else %}
-    <h1>Dados</h1>
-    <table>
-        <tr>
-            <th>Id</th>
-            <th>Nome</th>
-            <th>Telefone</th>
-            <th>Email</th>
-            <th>Nascimento</th>
-            <th>Gênero</th>
-            <th>Ações</th>
-        </tr>
-        {% for aluno in alunos %}
-        <tr>
-            <td>{{aluno.id}}</td>
-            <td>{{aluno.nome}}</td>
-            <td>{{aluno.telefone}}</td>
-            <td>{{aluno.email}}</td>
-            <td>{{aluno.nascimento}}</td>
-            <td>{{aluno.genero}}</td>
-            <td>
-                <form action="/alunos.html" method="POST">
-                    <input type="hidden" name="id" value="{{ aluno.id }}" readonly>
-                    <input type="submit" name="action" value="Remover Aluno">
-                </form>
-                <br>
-                <a href="/update/aluno/{{aluno.id}}">Editar</a>
-                <!--
-                <form action="/alunos.html" method="POST">
-                    <input type="hidden" name="id" value="{{ aluno.id }}">
-                    <input type="submit" name="action" value="Atualizar Aluno">
-                </form>
-                -->
-            </td>
-        </tr>
-        {% endfor %}
+    <br>
+    <h1 class="text-center">Alunos</h1>
+    <br>
+    <table class="table table-light table-striped">
+        <thead class="bg-info">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Telefone</th>
+                <th scope="col">E-mail</th>
+                <th scope="col">Nascimento</th>
+                <th scope="col">Genero</th>
+                <th scope="col">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for aluno in alunos %}
+            <tr>
+                <td>{{aluno.id}}</td>
+                <td>{{aluno.nome}}</td>
+                <td>{{aluno.telefone}}</td>
+                <td>{{aluno.email}}</td>
+                <td>{{aluno.nascimento}}</td>
+                <td>{{aluno.genero}}</td>
+                <td>
+                    <div class="dropdown" role="group">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            Ações
+                        </button>
+                        <div class="dropdown-menu">
+                            <form action="/alunos.html" method="POST">
+                                <input type="hidden" name="id" value="{{ aluno.id }}" readonly>
+                                <input role="button" type="submit" class="dropdown-item" name="action" value="Remover">
+                            </form>
+                            <a role="button" class="dropdown-item" href="/update/aluno/{{aluno.id}}">Editar</a>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
     </table>
     <br><a href="alunos.html" method="GET">Buscar novo aluno</a>
     {%  endif %}
-    <h2>Cadastrar novo aluno</h2>
-    <form action="/alunos.html" method="POST">
-        <input type="text" name="nome" id="nome" placeholder="Nome"><br>
-        <input type="text" name="tel" id="tel" placeholder=Telefone><br>
-        <input type="text" name="email" id="email" placeholder="Email"><br>
-        <input type="text" name="nascimento" id="nascimento" placeholder="Nascimento"><br>
-        <input type="text" name="genero" id="genero" placeholder="Genero"><br>
-        <input type="submit" name="action" value="Enviar Dados">
-    </form>
-    <br><br><br>
-    <a href="/">Retornar à Home Page</a>
-
 </div>
-{% endblock %}
+<br><br>
+<h4 class="text-center">Ou...</h4>
+<br><br>
+<div class="col-12">
+    <div class="row">
+        <div class="col-4 text-center pt-4">
+            <h3>Cadastre novo(a) Aluno(a):</h3>
+        </div>
+
+        <div class="col-8">
+            <form action="/alunos.html" method="POST">
+                <div class="row">
+                    <div class="col">
+                        <div class="ml-2 mx-1 mt-1">
+                            <label class="font-weight-bold" for="data">Nome:</label>
+                            <input class="form-control" style="width: 100% !important;" type="text" name="nome"
+                                id="nome" placeholder="Nome do(a) Aluno(a)">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="ml-2 mx-1 mt-1">
+                            <label class="font-weight-bold" for="data">E-mail:</label>
+                            <input class="form-control" style="width: 100% !important;" type="email" name="email"
+                                id="email" placeholder="Email@email.com">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="ml-2 mx-1 mt-1">
+                            <label class="font-weight-bold" for="data">Telefone:</label>
+                            <input class="form-control" style="width: 100% !important;" type="number" name="tel"
+                                id="tel" placeholder="65999999999">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <div class="my-1">
+                            <label class="mr-sm-2 font-weight-bold ml-2" for="situacaoForm">Gênero</label>
+                            <select required class="custom-select mr-sm-2 ml-2" id="situacaoForm" name="genero">
+                                <option value="M">M - Masculino</option>
+                                <option value="F">F - Feminino</option>
+                                <option value="O">O - Outro</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="mx-1 ml-3 my-1">
+                            <label class="font-weight-bold ml-3" for="data">Data de Nascimento</label>
+                            <input class="form-control pr-3 w-75 ml-3" type="date" name="nascimento" id="data">
+                            <small class="form-text text-muted">Insira o ano em números</small>
+                        </div>
+                    </div>
+                </div>
+
+
+                <input type="submit" class="btn btn-primary ml-3 my-1" name="action" value="Enviar Dados">
+            </form>
+        </div>
+    </div>
+</div>
+<br><br>
+
+{% endblock %} 

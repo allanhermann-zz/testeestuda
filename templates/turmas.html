@@ -1,117 +1,211 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<title>Estuda.com</title>
+<title>Gerenciamento de Turmas</title>
 {% endblock %}
 
 {% block body %}
-<div class="turma">
+<div class="col-12">
     {% if verif == 1 %}
-    <h1>Nenhuma escola encontrada</h1>
+    <br><br>
+    <h1 class="text-center">Nenhuma escola encontrada</h1>
     <br><br>
     {% endif %}
     {% if verifa == 1 %}
-    <h1>Nenhuma turma encontrada</h1>
-    <br><br><br>
-    <h2>Cadastrar nova turma</h2>
-    <form action="/turmas.html" method="POST">
-        <input type="text" name="nivel" id="nivel" placeholder="nivel">
-        <input type="text" name="ano" id="ano" placeholder="ano">
-        <input type="text" name="serie" id="serie" placeholder="serie">
-        <input type="text" name="turno" id="turno" placeholder="turno">
-        <input type="text" name="escola" id="escola" value="{{escola.nome}}" readonly>
-        <input type="submit" name="action" value="Cadastrar Turma">
-    </form>
+    <br><br>
+    <h1 class="text-center">Nenhuma turma cadastrada</h1>
+    <br><br><br><br>
+    <div class="row">
+        <div class="col text-center pt-4">
+            <h2>Cadastrar nova turma:</h2>
+        </div>
+        <div class="col form-row justify-content-start">
+            <form action="/turmas.html" method="POST">
+                <div class="row">
+                    <div class="my-1">
+                        <label class="mr-sm-2 font-weight-bold" for="nivelForm"> Nível do Ensino </label>
+                        <select required class="custom-select mr-sm-2 pr-3" id="nivelForm" name="nivel">
+                            <option value="Fundamental">Fundamental</option>
+                            <option value="Médio">Médio</option>
+                            <option value="Superior">Superior</option>
+                        </select>
+                    </div>
+                    <div class="mx-1 mt-1 ml-3">
+                        <label class="font-weight-bold" for="data">Ano de oferta:</label>
+                        <input class="form-control ml-3 w-50" type="year" name="ano" id="ano" placeholder="Ex: 2019" minlength="4" maxlength="4">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="my-1">
+                        <label class="mr-sm-2 font-weight-bold" for=" turnoForm"> Turno das Aulas </label>
+                        <select required class="custom-select mr-sm-2" id="turnoForm" name="turno">
+                            <option value="Matutino">Matutino</option>
+                            <option value="Vespertino">Vespertino</option>
+                            <option value="Noturno">Noturno</option>
+                            <option value="Integral">Integral</option>
+                        </select>
+                    </div>
+                    <div class="mx-1 mt-1 ml-3">
+                        <label class="font-weight-bold ml-3" for="data">Série</label>
+                        <input class="form-control ml-3 w-50 pr-3" type="number" name="serie" id="serie"
+                            placeholder="Ex: 3">
+                        <small class="form-text text-muted">Insira a série em números</small>
+                    </div>
+                </div>
+                <div class="row">
+                    <input class="form-control text-muted" type="hidden" name="escola" id="escola"
+                        value="{{escola.nome}}" readonly>
+                    <input class="btn btn-primary mb-2" type="submit" name="action" value="Cadastrar Turma">
+                </div>
+            </form>
+        </div>
+    </div>
     <br><br>
     {% endif %}
-    
+
     {% if escolas|length < 1 and turmas|length < 1 %}
-    <h2>Digite o nome da escola que deseja buscar a turma</h2>
-    <form action="/turmas.html" method="POST">
-        <input type="text" name='nome' id="nome" placeholder="Nome da Escola"><br>
-        <input type="submit" name="action" value="Buscar Escola">
-    </form>
+    <br><br>
+    <div class="col-12 text-center mb-5">
+        <h3>Busca de Turmas</h2>
+            <small class="form-text text-muted pb-2">Digite o nome da escola, ou parte dele, para buscar turmas ou
+                cadastrar novas</small>
+            <form class="form-inline justify-content-center" action="/turmas.html" method="POST">
+                <input type="text" name="nome" class="form-control w-50" id="buscaEscola" placeholder="Ex: CEJA">
+                <input type="submit" class="ml-1 mt-2 btn btn-primary mb-2" name="action" value="Buscar Escola">
+            </form>
+    </div>
     {% endif %}
     {% if escolas|length > 0 and turmas|length < 1 %}
-    <h1>Dados</h1>
-    <table>
-        <tr>
-            <th>Id</th>
-            <th>Nome</th>
-            <th>Endereço</th>
-            <th>Situação</th>
-            <th>Data</th>
-            <th>Ações</th>
-        </tr>
-        {% for escola in escolas %}
-        <tr>
-            <td>{{escola.id}}</td>
-            <td>{{escola.nome}}</td>
-            <td>{{escola.endereco}}</td>
-            <td>{{escola.situacao}}</td>
-            <td>{{escola.data}}</td>
-            <td>
-                <form action="/turmas.html" method="POST">
-                    <input type="hidden" name="id" value="{{ escola.id }}" readonly>
-                    <input type="submit" name="action" value="Selecionar Escola">
-                </form>
-                <br>
-            </td>
-        </tr>
-        {% endfor %}
+    <br>
+    <h1 class="text-center">Escolas</h1>
+    <br>
+    <table class="table table-light table-striped">
+        <thead class="bg-info">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Endereço</th>
+                <th scope="col">Situação</th>
+                <th scope="col">Ano</th>
+                <th scope="col">Ação</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for escola in escolas %}
+            <tr>
+                <td>{{escola.id}}</td>
+                <td>{{escola.nome}}</td>
+                <td>{{escola.endereco}}</td>
+                <td>{{escola.situacao}}</td>
+                <td>{{escola.data}}</td>
+                <td>
+                    <form action="/turmas.html" method="POST">
+                        <input type="hidden" name="id" value="{{ escola.id }}" readonly>
+                        <input type="submit" class="btn btn-primary mb-2" name="action" value="Selecionar Escola">
+                    </form>
+                    <br>
+                </td>
+            </tr>
+            {% endfor %}
     </table>
-    <br><a href="turmas.html" method="GET">Buscar novas escolas</a><br>
+    <br><a role="button" class="btn btn-primary" href="/turmas.html" method="GET">Buscar Novas Escolas</a><br><br>
     {% endif %}
     {%  if turmas|length > 0 %}
-    <h1>Dados</h1>
-    <table>
-        <tr>
-            <th>Id</th>
-            <th>Nivel</th>
-            <th>Ano</th>
-            <th>Série</th>
-            <th>Turno</th>
-            <th>Escola</th>
-            <th>Ações</th>
-        </tr>
-        {% for turma in turmas %}
-        <tr>
-            <td>{{turma.id}}</td>
-            <td>{{turma.nivel}}</td>
-            <td>{{turma.ano}}</td>
-            <td>{{turma.serie}}</td>
-            <td>{{turma.turno}}</td>
-            <td>{{turma.escola.nome}}</td>
-            <td>
-                <form action="/turmas.html" method="POST">
-                    <input type="hidden" name="id" value="{{ turma.id }}" readonly>
-                    <input type="submit" name="action" value="Remover Turma">
-                </form>
-                
-                <form action="/turmas.html" method="POST">
-                    <input type="hidden" name="id" value="{{ turma.id }}">
-                    <input type="submit" name="action" value="Cadastrar Alunos">
-                </form>
-    
-                <a href="/update/turma/{{turma.id}}">Editar</a>
-                
-            </td>
-        </tr>
-        {% endfor %}
+    <br>
+    <h1 class="text-center">Turmas</h1>
+    <br>
+    <table class="table table-light table-striped">
+        <thead class="bg-info">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nível</th>
+                <th scope="col">Ano</th>
+                <th scope="col">Série</th>
+                <th scope="col">Turno</th>
+                <th scope="col">Escola</th>
+                <th scope="col">Ação</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for turma in turmas %}
+            <tr>
+                <td>{{turma.id}}</td>
+                <td>{{turma.nivel}}</td>
+                <td>{{turma.ano}}</td>
+                <td>{{turma.serie}}</td>
+                <td>{{turma.turno}}</td>
+                <td>{{turma.escola.nome}}</td>
+                <td>
+                    <div class="dropdown" role="group">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            Ações
+                        </button>
+                        <div class="dropdown-menu">
+                            <form action="/turmas.html" method="POST">
+                                <input type="hidden" name="id" value="{{ turma.id }}" readonly>
+                                <input role="button" type="submit" class="dropdown-item" name="action" value="Remover">
+                            </form>
+                            <form action="/turmas.html" method="POST">
+                                <a role="button" class="dropdown-item" href="/update/turma/{{turma.id}}">Editar</a>
+                                <form action="/turmas.html" method="POST">
+                                    <input type="hidden" name="id" value="{{ turma.id }}">
+                                    <input type="submit" class="dropdown-item" name="action" value="Matricular Alunos">
+                                </form>
+                        </div>
+                    </div>
+
+                </td>
+            </tr>
+            {% endfor %}
     </table>
     <br><br><br>
-    <h2>Cadastrar nova turma</h2>
-    <form action="/turmas.html" method="POST">
-        <input type="text" name="nivel" id="nivel" placeholder="nivel">
-        <input type="text" name="ano" id="ano" placeholder="ano">
-        <input type="text" name="serie" id="serie" placeholder="serie">
-        <input type="text" name="turno" id="turno" placeholder="turno">
-        <input type="text" name="escola" id="escola" value="{{escola.nome}}" readonly>
-        <input type="submit" name="action" value="Cadastrar Turma">
-    </form>
-    <br><a href="turmas.html" method="GET">Buscar nova escola</a>
+    <div class="row">
+        <div class="col text-center pt-4">
+            <h2>Cadastre nova turma:</h2>
+        </div>
+        <div class="col form-row justify-content-start">
+            <form action="/turmas.html" method="POST">
+                <div class="row">
+                    <div class="my-1">
+                        <label class="mr-sm-2 font-weight-bold" for="nivelForm"> Nível do Ensino </label>
+                        <select required class="custom-select mr-sm-2 pr-3" id="nivelForm" name="nivel">
+                            <option value="Fundamental">Fundamental</option>
+                            <option value="Médio">Médio</option>
+                            <option value="Superior">Superior</option>
+                        </select>
+                    </div>
+                    <div class="mx-1 mt-1 ml-3">
+                        <label class="font-weight-bold" for="data">Ano de oferta:</label>
+                        <input class="form-control ml-3 w-50" type="year" name="ano" id="ano" placeholder="Ex: 2019" minlength="4">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="my-1">
+                        <label class="mr-sm-2 font-weight-bold" for=" turnoForm"> Turno das Aulas </label>
+                        <select class="custom-select mr-sm-2" id="turnoForm" name="turno" required>
+                            <option value="Matutino">Matutino</option>
+                            <option value="Vespertino">Vespertino</option>
+                            <option value="Noturno">Noturno</option>
+                            <option value="Integral">Integral</option>
+                        </select>
+                    </div>
+                    <div class="mx-1 mt-1 ml-3">
+                        <label class="font-weight-bold ml-3" for="data">Série</label>
+                        <input class="form-control ml-3 w-50 pr-3" type="number" name="serie" id="serie"
+                            placeholder="Ex: 3">
+                        <small class="form-text text-muted">Insira a série em números</small>
+                    </div>
+                </div>
+                <div class="row">
+                    <input class="form-control text-muted" type="hidden" name="escola" id="escola"
+                        value="{{escola.nome}}" readonly>
+                    <input class="btn btn-primary mb-2" type="submit" name="action" value="Cadastrar Turma">
+                </div>
+            </form>
+        </div>
+    </div>
+    <br><a role="button" class="btn btn-primary" href="/turmas.html" method="GET">Buscar Novas Escolas</a><br><br>
     {%  endif %}
-    <br><br><br>
-    <a href="/">Retornar à Home Page</a>
 </div>
 {% endblock %}

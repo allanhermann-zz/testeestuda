@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<title>Estuda.com</title>
+<title>Gerenciamento de Escolas</title>
 {% endblock %}
 
 {% block body %}
@@ -12,85 +12,126 @@
     <br><br>
     {% endif %}
     {% if escolas|length < 1 %}
+    <br><br>
+    <div class="col-12 text-center mb-5">
+        <h3>Busca de Escolas</h2>
+            <small class="form-text text-muted pb-2">Digite o nome completo, parte do nome da Escola ou deixe em branco
+                para listar
+                todas</small>
+            <form class="form-inline justify-content-center" action="/escolas.html" method="POST">
+                <input type="text" name="nome" class="form-control w-50" id="buscaEscola" placeholder="Ex: CEJA">
+                <input type="submit" class="ml-1 mt-2 btn btn-primary mb-2" name="action" value="Buscar Escola">
+            </form>
+    </div>
+    {%  else %}
     <br>
-    <h3>Busca de Escolas</h2>
-        <small class="form-text text-muted">Digite o nome completo ou parte do nome da Escola</small>
-        <form class="form-inline" action="/escolas.html" method="POST">
-            <input type="text" name="nome" class="form-control" id="buscaEscola" placeholder="Ex: CEJA">
-            <input type="submit" class="btn btn-primary mb-2" name="action" value="Buscar Escola">
-        </form>
+    <h1 class="text-center">Escolas</h1>
+    <br>
+    <table class="table table-light table-striped">
+        <thead class="bg-info">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Endereço</th>
+                <th scope="col">Situação</th>
+                <th scope="col">Data</th>
+                <th scope="col">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for escola in escolas %}
+            <tr>
+                <td>{{escola.id}}</td>
+                <td>{{escola.nome}}</td>
+                <td>{{escola.endereco}}</td>
+                <td>{{escola.situacao}}</td>
+                <td>{{escola.data}}</td>
+                <td>
+                    <div class="dropdown" role="group">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            Ações
+                        </button>
+                        <div class="dropdown-menu">
+                            <form action="/escolas.html" method="POST">
+                                <input type="hidden" name="id" value="{{ escola.id }}" readonly>
+                                <input role="button" type="submit" class="dropdown-item" name="action" value="Remover">
+                            </form>
+                            <a role="button" class="dropdown-item" href="/update/escola/{{escola.id}}">Editar</a>
+                            <a role="button" class="dropdown-item"
+                                href="https://www.google.com.br/maps/place/{{escola.endereco}}" target="blank">Ver
+                                no
+                                Mapa</a>
 
 
-        {%  else %}
-        <h1 class="text-center">Escolas</h1>
-        <table class="table table-light table-striped">
-            <thead class="bg-info">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Nome</th>
-                    <th scope="col">Endereço</th>
-                    <th scope="col">Situação</th>
-                    <th scope="col">Data</th>
-                    <th scope="col">Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for escola in escolas %}
-                <tr>
-                    <td>{{escola.id}}</td>
-                    <td>{{escola.nome}}</td>
-                    <td>{{escola.endereco}}</td>
-                    <td>{{escola.situacao}}</td>
-                    <td>{{escola.data}}</td>
-                    <td>
-                        <div class="dropdown" role="group">
-                            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
-                                Ações
-                            </button>
-                            <div class="dropdown-menu">
-                                <form action="/escolas.html" method="POST">
-                                    <input type="hidden" name="id" value="{{ escola.id }}" readonly>
-                                    <input role="button" type="submit" class="dropdown-item" name="action"
-                                        value="Remover">
-                                </form>
-                                <form action="/escolas.html" method="POST">
-                                    <a role="button" class="dropdown-item"
-                                        href="/update/escola/{{escola.id}}">Editar</a>
-                                    <a role="button" class="dropdown-item"
-                                        href="https://www.google.com.br/maps/place/{{escola.endereco}}"
-                                        target="blank">Ver no
-                                        Mapa</a>
-
-
-                            </div>
                         </div>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <a role="button" class="btn btn-primary" href="/escolas.html" method="GET">Buscar Nova Escola</a>
-        {%  endif %}
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a role="button" class="btn btn-primary" href="/escolas.html" method="GET">Buscar Nova Escola</a>
+    {%  endif %}
 </div>
 <br><br>
 <h4 class="text-center">Ou...</h4>
 <br><br>
 <div class="col-12">
+    <div class="row">
+        <div class="col-4 text-center pt-4">
+            <h2>Cadastre nova escola:</h2>
+        </div>
 
-    <h2>Cadastre nova escola</h2>
-    <form action="/escolas.html" method="POST">
-        <label for="nome">Nome</label>
-        <input type="text" name="nome" class="form-control" id="nome" placeholder="Ex: Escola Senador Filinto Muller">
-        <label for="endereco">Endereço</label>
-        <input type="text" name="endereco" id="endereco" class="form-control"
-            placeholder="Ex: Avenida Fernando Correa, 2332">
-        <label for="situacao">Situação de Funcionamento</label>
-        <input type="text" name="situacao" id="situacao" class="form-control" placeholder="Ex: Em Funcionamento">
-        <label for="data">Ano</label>
-        <input type="text" name="data" id="data" class="form-control" placeholder="Ex:1979"><br>
-        <input type="submit" class="btn btn-primary" name="action" value="Enviar Dados">
-    </form>
-    <br><br>
+        <div class="col form-row justify-content-start ">
+            <form action="/escolas.html" method="POST">
+                <div class="row">
+                    <div class="col">
+                        <div class="ml-2 mx-1 mt-1">
+                            <label class="font-weight-bold" for="data">Nome:</label>
+                            <input class="form-control" style="width: 100% !important;" type="text" name="nome" id="ano"
+                                placeholder="Nome da Escola">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="ml-2 mx-1 mt-1">
+                            <label class="font-weight-bold" for="data">Endereço:</label>
+                            <input class="form-control" type="text" name="endereco" id="ano"
+                                placeholder="Endereço Completo">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <div class="my-1">
+                            <label class="mr-sm-2 font-weight-bold ml-2" for="situacaoForm">Situação de
+                                Funcionamento</label>
+                            <select required class="custom-select mr-sm-2 ml-2" id="situacaoForm" name="situacao">
+                                <option value="Em atividade">Em atividade</option>
+                                <option value="Paralisada">Paralisada</option>
+                                <option value="Extinta">Extinta</option>
+                                <option value="Extinta no ano anterior">Extinta no ano anterior</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="mx-1 ml-3 my-1">
+                            <label class="font-weight-bold ml-3" for="data">Ano</label>
+                            <input class="form-control ml-3 w-50 pr-3" type="year" name="data" id="data"
+                                placeholder="Ex: 1979" required minlength="4">
+                            <small class="form-text text-muted">Insira o ano em números</small>
+                        </div>
+                    </div>
+                </div>
+                <input type="submit" class="btn btn-primary ml-3 my-1" name="action" value="Enviar Dados">
+            </form>
+        </div>
+    </div>
 </div>
+<br><br>
 {% endblock %}

@@ -1,34 +1,46 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<title>Estuda.com</title>
+<title>Cadastro de Matrículas</title>
 {% endblock %}
 
 {% block body %}
 <div class="alunosturmas">
     {% if verif == 1 %}
-    <h1>Nenhum aluno encontrado</h1>
+    <br><br>
+    <h2 class="text-center">Nenhum aluno encontrado</h2>
     <br><br>
     {% endif %}
     {% if alunos|length < 1 %}
-    <h2>Digite o nome do aluno que deseja matricular na matéria selecionada</h2>
-    <form action="/alunosturmas.html" method="POST">
-        <input type="text" name='nome' id="nome" placeholder="Nome do Aluno"><br>
-        <input type="hidden" name="turmaid" value="{{ turma }}" >
-        <input type="submit" name="action" value="Buscar Aluno">
-    </form>
+    <br><br>
+    <div class="col-12 text-center mb-5">
+        <h3>Busca de Alunos para matrícula</h2>
+            <small class="form-text text-muted pb-2">Digite o nome completo, parte do nome do Aluno(a) que deseja matricular ou deixe em branco
+                para listar
+                todos(as)</small>
+            <form class="form-inline justify-content-center" action="/alunosturmas.html" method="POST">
+                <input type="text" name="nome" class="form-control w-50" id="buscaEscola" placeholder="Nome do Aluno">
+                <input type="hidden" name="turmaid" value="{{ turma }}" >
+                <input type="submit" class="ml-1 mt-2 btn btn-primary mb-2" name="action" value="Buscar Aluno(a)">
+            </form>
+    </div>
     {% else %}
-    <h1>Dados</h1>
-    <table>
-        <tr>
-            <th>Id</th>
-            <th>Nome</th>
-            <th>Telefone</th>
-            <th>Email</th>
-            <th>Nascimento</th>
-            <th>Gênero</th>
-            <th>Ações</th>
-        </tr>
+    <br>
+    <h1 class="text-center">Alunos</h1>
+    <br>
+    <table class="table table-light table-striped">
+            <thead class="bg-info">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Telefone</th>
+                    <th scope="col">E-mail</th>
+                    <th scope="col">Nascimento</th>
+                    <th scope="col">Genero</th>
+                    <th scope="col">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
         {% for aluno in alunos %}
         <tr>
             <td>{{aluno.id}}</td>
@@ -41,17 +53,18 @@
                 <form action="/alunosturmas.html" method="POST">
                     <input type="hidden" name="alunoid" value="{{ aluno.id }}" readonly>
                     <input type="hidden" name="turmaid" value="{{ turma }}" >
-                    <input type="submit" name="action" value="Matricular Aluno">
+                    <input type="submit" role="button" class="btn btn-primary" name="action" value="Matricular Aluno(a)">
                 </form>
-                <br>
             </td>
         </tr>
         {% endfor %}
     </table>
-    <br><a href="alunosturmas.html" method="GET">Buscar novo aluno</a>
+    <form action="/alunosturmas.html" method="POST">
+        <input type="hidden" name="turmaid" value="{{ turma }}" >
+        <input type="submit" role="button" class="btn btn-primary" name="action" value="Buscar novo aluno(a)">
+    </form>
     {%  endif %}
     <br><br><br>
-    <a href="/">Retornar à Home Page</a>
 
 </div>
 {% endblock %}
