@@ -48,7 +48,7 @@ aulas = db.Table(
 class Escola(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(200))
-    endereco = db.Column(db.String(90))
+    endereco = db.Column(db.String(150))
     situacao = db.Column(db.String(45), nullable=True)
     data = db.Column(db.Integer, nullable=True)
     turmas = db.relationship("Turma", backref="escola", lazy="dynamic")
@@ -111,7 +111,7 @@ def escolas():
             try:
                 db.session.add(nova_escola)
                 db.session.commit()
-                return render_template("/escolas.html", verif=0)
+                return redirect("/")
             except:
                 return "Erro durante a Inserção, cheque seus dados"
 
@@ -125,18 +125,15 @@ def escolas():
                 verif = 1
             return render_template("escolas.html", escolas=escolas, verif=verif)
 
-        elif escoladados["action"] == "Remover Escola":
+        elif escoladados["action"] == "Remover":
             try:
                 db.session.delete(Escola.query.get_or_404(escoladados["id"]))
                 db.session.commit()
-                return (
-                    "<h1>Escola removida</h1> <br><a href='/'> Retornar à HomePage </a>"
-                )
+                return redirect("/")
             except:
-                return (
-                    "<h1>Ocorreu um erro</h1> <br><a href='/'> Retornar à HomePage </a>"
-                )
-        elif escoladados["action"] == "Atualizar Escola":
+                return "Ocorreu um erro, cheque seus dados"
+
+        elif escoladados["action"] == "Atualizar":
             return render_template("escolas.html", verif=0)
     else:
         return render_template("escolas.html", verif=0)

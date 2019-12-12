@@ -6,15 +6,22 @@
 
 {% block body %}
 <div class="escolaupdate">
-    <h1>Dados</h1>
-    <form action="/update/escola/{{escola.id}}" method="POST">
-        <input type="text" name="nome" id="nome" value="{{escola.nome}}">
-        <input type="text" name="endereco" id="tel" value="{{escola.endereco}}">
-        <input type="text" name="situacao" id="email" value="{{escola.situacao}}">
-        <input type="text" name="data" id="data" value="{{escola.data}}">
-        <input type="submit" value="Atualizar Dados">
-    </form>
-    <br><br><br>
-    <a href="../../index.html">Retornar à HomePage</a>
+    <div class="col-12">
+        <br>
+            <h2>Altere os dados necessários</h2>
+            <form action="/update/escola/{{escola.id}}" method="POST">
+                <label for="nome">Nome</label>
+                <input type="text" name="nome" class="form-control" id="nome" value="{{escola.nome}}">
+                <label for="endereco">Endereço</label>
+                <input type="text" name="endereco" class="form-control" id="endereco" value="{{escola.endereco}}">
+                <label for="situacao">Situação de Funcionamento</label>
+                <input type="text" name="situacao" class="form-control" id="situacao" value="{{escola.situacao}}">
+                <label for="data">Ano</label>
+                <input type="text" name="data" class="form-control" id="data" value="{{escola.data}}">
+                <input type="submit" class="btn btn-primary" name="action" value="Atualizar Dados">
+            </form>
+            <br><br>
+        </div>
+
 </div>
 {% endblock %}
