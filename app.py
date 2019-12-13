@@ -11,7 +11,7 @@ from sqlalchemy_utils import create_database
 try:
     from app import db, engine, Escola
 
-    create_database(engine)
+    #create_database(engine)
 
     db.create_all()
 
@@ -35,14 +35,13 @@ try:
 except:
     pass
 
-CLEARDB_DATABASE_URL = "mysql://bd784eaba7307d:4a6bd961@us-cdbr-iron-east-05.cleardb.net/heroku_56973eeaab8af2f"
+engine = "mysql://bd784eaba7307d:4a6bd961@us-cdbr-iron-east-05.cleardb.net/heroku_56973eeaab8af2f"
 #engine = "mysql://root:root@localhost/school"
-engine = CLEARDB_DATABASE_URL
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = engine
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
-
+db.create_all()
 
 aulas = db.Table(
     "aulas",
