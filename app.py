@@ -34,8 +34,8 @@ try:
 except:
     pass
 
-#engine = "mysql://bd784eaba7307d:4a6bd961@us-cdbr-iron-east-05.cleardb.net/heroku_56973eeaab8af2f"
-engine = "mysql://root:root@localhost/school"
+engine = "mysql://bd784eaba7307d:4a6bd961@us-cdbr-iron-east-05.cleardb.net/heroku_56973eeaab8af2f"
+#engine = "mysql://root:root@localhost/school"
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = engine
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
