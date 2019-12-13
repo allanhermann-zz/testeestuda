@@ -182,6 +182,10 @@
             {% endfor %}
     </table>
     <br><br><br>
+    {% if noc == 1 %}
+    <br><a role="button" class="btn btn-primary" href="turmas.html" method="GET">Buscar nova turma</a>
+
+    {% else %}
     <div class="row">
         <div class="col text-center pt-4">
             <h2>Cadastre nova turma:</h2>
@@ -228,6 +232,7 @@
         </div>
     </div>
     <br><a role="button" class="btn btn-primary" href="/turmas.html" method="GET">Buscar Novas Escolas</a><br><br>
-    {%  endif %}
+    {% endif %}
+    {% endif %}
 </div>
 {% endblock %}

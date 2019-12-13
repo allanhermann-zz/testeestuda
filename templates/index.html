@@ -5,23 +5,108 @@
 {% endblock %}
 
 {% block body %}
-
-{% if alert==1 %}
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-    <strong>A operação foi bem sucedida</strong> Você foi redirecionado para a Homepage
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
+<br><br>
+<div class="row">
+    <div class="col text-center">
+        <div name="titulo">
+            <h1>Sistema de Controle Escolar</h1>
+        </div>
+    </div>
 </div>
-{% endif %}
+<br><br><br>
+<div class="row">
+    <div class="col-4">
+        <div style="border-width:2px !important; border-radius:5px !important;"
+            class="list-group border border-primary " id="list-tab" role="tablist">
+            <a class="list-group-item list-group-item-action list-group-item-info font-weight-bold active"
+                id="list-info-list" data-toggle="list" href="#list-info" role="tab">Informações</a>
+            <a class="list-group-item list-group-item-action list-group-item-info font-weight-bold"
+                id="list-escola-list" data-toggle="list" href="#list-escola" role="tab">Controle de Escolas</a>
+            <a class="list-group-item list-group-item-action list-group-item-info font-weight-bold" id="list-turma-list"
+                data-toggle="list" href="#list-turma" role="tab">Controle de Turmas</a>
+            <a class="list-group-item list-group-item-action list-group-item-info font-weight-bold" id="list-aluno-list"
+                data-toggle="list" href="#list-aluno" role="tab">Controle de Alunos</a>
+            <a class="list-group-item list-group-item-action list-group-item-info font-weight-bold "
+                id="list-matricula-list" data-toggle="list" href="#list-matricula" role="tab">Controle de Matriculas</a>
+        </div>
+    </div>
+    <div class="col-8">
+        <div style="border-width:2px !important; border-radius:5px !important;"
+            class="tab-content ml-4 list-group-item-info h-100 w-100 border-primary border" id="nav-tabContent">
 
-{% if alert==2 %}
-<div class="alert alert-danger alert-dismissible fade show" role="alert">
-    <strong>A operação falhou</strong> Você foi redirecionado para a Homepage
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
+            <div class="tab-pane fade show active" role="tabpanel" id="list-info" aria-labelledby="list-info-list">
+                <h3 class="mt-3 text-center">Informações</h3>
+                <p class="ml-3 text-left">O sistema oferece as seguintes ferramentas:</p>
+                <ul class="ml-5 text-left">
+                    <li>Gerenciamento de Escolas</li>
+                    <li>Gerenciamento de Turmas</li>
+                    <li>Gerenciamento de Aulas</li>
+                    <li>Gerenciamento de Matriculas</li>
+                </ul>
+                <p class="ml-3 text-left">Clique nas opções ao lado para saber mais sobre o sistema, ou no menu superior para começar a
+                    gerenciar</p>
+            </div>
+
+            <div class="tab-pane fade show" id="list-escola" role="tabpanel" aria-labelledby="list-escola-list">
+                <h3 class="mt-3 text-center">Controle de Escolas</h3>
+                <p class="ml-3 text-left">O sistema oferece as seguintes ferramentas:</p>
+                <ul class="ml-5 text-left">
+                    <li>Cadastro de Escolas</li>
+                    <li>Edição de Escolas</li>
+                    <li>Remoção de Escolas</li>
+                    <li>Cadastro de Turmas em uma Escola</li>
+                    <li>Visualização das Turmas de uma Escola</li>
+                    <li>Visualização da Escola no Mapa</li>
+                </ul>
+                <p class="ml-3 text-left">Clique nas opções ao lado para saber mais sobre o sistema, ou no menu superior para começar a
+                    gerenciar</p>
+            </div>
+            <div class="tab-pane fade" id="list-turma" role="tabpanel" aria-labelledby="list-turma-list">
+
+                <h3 class="mt-3 text-center">Controle de turmas</h3>
+                <p class="ml-3 text-left">O sistema oferece as seguintes ferramentas:</p>
+                <ul class="ml-5 text-left">
+                    <li>Cadastro de Turmas</li>
+                    <li>Edição de Turmas</li>
+                    <li>Remoção de Turmas</li>
+                    <li>Visualização das Turmas de uma Escola</li>
+                    <li>Visualização dos Alunos de uma Turma</li>
+                </ul>
+                <p class="ml-3 text-left">Clique nas opções ao lado para saber mais sobre o sistema, ou no menu superior para começar a
+                    gerenciar</p>
+
+            </div>
+            <div class="tab-pane fade" id="list-aluno" role="tabpanel" aria-labelledby="list-aluno-list">
+
+                <h3 class="mt-3 text-center">Controle de alunos</h3>
+                <p class="ml-3 text-left">O sistema oferece as seguintes ferramentas:</p>
+                <ul class="ml-5 text-left">
+                    <li>Cadastro de Alunos</li>
+                    <li>Edição de Alunos</li>
+                    <li>Remoção de Alunos</li>
+                    <li>Busca de Alunos</li>
+
+                </ul>
+                <p class="ml-3 text-left">Clique nas opções ao lado para saber mais sobre o sistema, ou no menu superior para começar a
+                    gerenciar</p>
+
+            </div>
+            <div class="tab-pane fade" id="list-matricula" role="tabpanel" aria-labelledby="list-matricula-list">
+
+                <h3 class="mt-3 text-center">Controle de Matriculas</h3>
+                <p class="ml-3 text-left">O sistema oferece as seguintes ferramentas:</p>
+                <ul class="ml-5 text-left">
+                    <li>Busca de turmas</li>
+                    <li>Matricula de alunos em uma turma</li>
+                    <li>Visualização de alunos matriculados em uma turma</li>
+                    <li>Visualização das matriculas de um aluno</li>
+                </ul>
+                <p class="ml-3 text-left">Obs: O controle de Matrículas é feito diretamente nas Turmas</p>
+                <p class="ml-3 text-left">Clique nas opções ao lado para saber mais sobre o sistema, ou no menu superior para começar a
+                    gerenciar</p>
+
+            </div>
+        </div>
+    </div>
 </div>
-{% endif %}
-
 {% endblock %}

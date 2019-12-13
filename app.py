@@ -34,8 +34,8 @@ try:
 except:
     pass
 
-engine = "mysql://bd784eaba7307d:4a6bd961@us-cdbr-iron-east-05.cleardb.net/heroku_56973eeaab8af2f"
-#engine = "mysql://root:root@localhost/school"
+#engine = "mysql://bd784eaba7307d:4a6bd961@us-cdbr-iron-east-05.cleardb.net/heroku_56973eeaab8af2f"
+engine = "mysql://root:root@localhost/school"
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = engine
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -75,8 +75,8 @@ class Turma(db.Model):
     serie = db.Column(db.Integer)
     turno = db.Column(db.String(45))
     escola_id = db.Column(db.Integer, db.ForeignKey("escola.id"))
-    aulas = db.relationship("Aluno", secondary=aulas,
-                            backref=db.backref("estudantes"))
+    aulas = db.relationship(
+        "Aluno", secondary=aulas, backref=db.backref("estudantes"))
 
     def __init__(self, nivel, ano, serie, turno, escola):
         self.nivel = nivel
@@ -93,8 +93,7 @@ class Aluno(db.Model):
     email = db.Column(db.String(45), nullable=True)
     nascimento = db.Column(db.Date)
     genero = db.Column(db.String(1))
-    aulas = db.relationship(
-        "Turma", secondary=aulas, backref=db.backref("estudantes"))
+
     __table_args__ = (
         db.UniqueConstraint('nome', 'nascimento', 'email', name='uniqueAluno'),
     )
@@ -215,6 +214,7 @@ def turmas():
                 turma = Turma.query.get_or_404(turmadados["id"])
                 escola = turma.escola
                 print(turma.escola)
+                print(turma)
                 db.session.delete(turma)
                 db.session.commit()
                 turmas = Turma.query.filter_by(escola=escola).all()
@@ -248,17 +248,17 @@ def turmas():
             except:
                 return render_template("/turmas.html", alert=2)
 
-        elif turmadados["action"] == "Ver Matriculas":
-            aluno = Aluno.query.get_or_404(turmadados["id"])
-            turmas = Turma.query.filter(
-                Turma.estudantes.any(id=aluno.id)).all()
-
-            if turmas:
-                verif = 0
-            else:
-                verif = 1
-
-            return render_template("turmas.html", turmas=turmas, escola=0, verif=verif)
+        #elif turmadados["action"] == "Ver Matriculas":
+        #    aluno = Aluno.query.get_or_404(turmadados["id"])
+        #    turmas = Turma.query.filter(
+        #        Turma.estudantes.any(id=aluno.id)).all()
+        #
+        #    if turmas:
+        #        verif = 0
+        #    else:
+        #        verif = 1
+        #
+        #   return render_template("turmas.html", turmas=turmas, escola=0, verif=verif, noc=1)
 
         elif turmadados["action"] == "Matricular Alunos":
             return render_template("/alunosturmas.html", turma=turmadados["id"])
@@ -333,7 +333,7 @@ def alunos():
                 verif = 0
             else:
                 verif = 1
-            return render_template("alunos.html", alunos=alunos, verif=verif)
+            return render_template("alunos.html", alunos=alunos, verif=verif, nod = 0)
 
         elif alunodados["action"] == "Ver Alunos":
             turma = Turma.query.get_or_404(alunodados["id"])
@@ -345,7 +345,7 @@ def alunos():
             else:
                 verif = 1
 
-            return render_template("alunos.html", alunos=alunos, verif=verif, noc=1)
+            return render_template("alunos.html", alunos=alunos, verif=verif, noc=1, nod=1, noe=1)
 
         elif alunodados["action"] == "Remover":
             try:
@@ -402,10 +402,10 @@ def matricula():
             )
 
         elif alunoturma["action"] == "Matricular Aluno(a)":
-            turmas = Turma.query.get_or_404(alunoturma["turmaid"])
+            turmas = Turma.query.get_or_404(turma)
             aluno = Aluno.query.get_or_404(alunoturma["alunoid"])
             try:
-                turmas.estudantes.append(aluno)
+                aluno.estudantes.append(turmas)
                 db.session.commit()
                 return render_template("alunosturmas.html", turma=turma, alert=1)
             except:
