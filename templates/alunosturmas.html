@@ -1,89 +1,116 @@
+<!-- Código para herdar a base -->
 {% extends 'base.html' %}
 
+<!-- Herdando head da base  -->
 {% block head %}
+
 <title>Cadastro de Matrículas</title>
+
 {% endblock %}
 
-{% block body %}
-
+<!-- Alerta de operação realizada com sucesso -->
 {% if alert==1 %}
+
 <div class="alert alert-success alert-dismissible text-center fade show" role="alert">
-    <strong>A operação foi bem sucedida</strong> O aluno foi matriculado
+    <strong>A operação foi bem sucedida</strong>
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
+
 {% endif %}
 
+<!-- Alerta de operação não realizada -->
 {% if alert==2 %}
+
 <div class="alert alert-danger alert-dismissible text-center fade show" role="alert">
     <strong>A operação falhou</strong>
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
+
 {% endif %}
 
 <div class="alunosturmas">
+
+    <!-- Verificando se nenhum aluno foi encontrado na busca -->
     {% if verif == 1 %}
+
     <br><br>
     <h2 class="text-center">Nenhum aluno encontrado</h2>
     <br><br>
+
     {% endif %}
+
+    <!-- Busca por alunos -->
     {% if alunos|length < 1 %}
+
     <br><br>
     <div class="col-12 text-center mb-5">
         <h3>Busca de Alunos para matrícula</h2>
-            <small class="form-text text-muted pb-2">Digite o nome completo, parte do nome do Aluno(a) que deseja matricular ou deixe em branco
+            <small class="form-text text-muted pb-2">Digite o nome completo, parte do nome do Aluno(a) que deseja
+                matricular ou deixe em branco
                 para listar
                 todos(as)</small>
             <form class="form-inline justify-content-center" action="/alunosturmas.html" method="POST">
                 <input type="text" name="nome" class="form-control w-50" id="buscaEscola" placeholder="Nome do Aluno">
-                <input type="hidden" name="turmaid" value="{{ turma }}" >
-                <input type="submit" style="cursor: pointer !important;" class="ml-1 mt-2 btn btn-primary mb-2" name="action" value="Buscar Aluno(a)">
+                <input type="hidden" name="turmaid" value="{{ turma }}">
+                <input type="submit" style="cursor: pointer !important;" class="ml-1 mt-2 btn btn-primary mb-2"
+                    name="action" value="Buscar Aluno(a)">
             </form>
     </div>
+
     {% else %}
+
     <br>
     <h1 class="text-center">Alunos</h1>
     <br>
     <table class="table table-light table-striped">
-            <thead class="bg-info">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Nome</th>
-                    <th scope="col">Telefone</th>
-                    <th scope="col">E-mail</th>
-                    <th scope="col">Nascimento</th>
-                    <th scope="col">Genero</th>
-                    <th scope="col">Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-        {% for aluno in alunos %}
-        <tr>
-            <td>{{aluno.id}}</td>
-            <td>{{aluno.nome}}</td>
-            <td>{{aluno.telefone}}</td>
-            <td>{{aluno.email}}</td>
-            <td>{{aluno.nascimento}}</td>
-            <td>{{aluno.genero}}</td>
-            <td>
-                <form action="/alunosturmas.html" method="POST">
-                    <input type="hidden" name="alunoid" value="{{ aluno.id }}" readonly>
-                    <input type="hidden" name="turmaid" value="{{ turma }}" >
-                    <input type="submit" role="button" class="btn btn-primary" name="action" style="cursor: pointer !important;" value="Matricular Aluno(a)">
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
+        <thead class="bg-info">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Telefone</th>
+                <th scope="col">E-mail</th>
+                <th scope="col">Nascimento</th>
+                <th scope="col">Genero</th>
+                <th scope="col">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Loop de exibição dos dados dos alunos-->
+            {% for aluno in alunos %}
+
+            <tr>
+                <td>{{aluno.id}}</td> <!-- Id dos alunos -->
+                <td>{{aluno.nome}}</td> <!-- Nome dos alunos -->
+                <td>{{aluno.telefone}}</td> <!-- Telefone dos alunos -->
+                <td>{{aluno.email}}</td> <!-- Email dos alunos -->
+                <td>{{aluno.nascimento}}</td> <!-- Data de nascimento dos alunos -->
+                <td>{{aluno.genero}}</td> <!-- Genero dos alunos -->
+                <td>
+                    <form action="/alunosturmas.html" method="POST">
+                        <input type="hidden" name="alunoid" value="{{ aluno.id }}" readonly>
+                        <input type="hidden" name="turmaid" value="{{ turma }}">
+                        <input type="submit" role="button" class="btn btn-primary" name="action"
+                            style="cursor: pointer !important;" value="Matricular Aluno(a)">
+                    </form>
+                </td>
+            </tr>
+
+            {% endfor %}
+
     </table>
     <form action="/alunosturmas.html" method="POST">
-        <input type="hidden" name="turmaid" value="{{ turma }}" >
-        <input type="submit" role="button" style="cursor: pointer !important;" class="btn btn-primary" name="action" value="Buscar novo aluno(a)">
+        <input type="hidden" name="turmaid" value="{{ turma }}">
+        <input type="submit" role="button" style="cursor: pointer !important;" class="btn btn-primary" name="action"
+            value="Buscar novo aluno(a)">
     </form>
-    {%  endif %}
-    <br><br><br>
 
+    {%  endif %}
+
+    <br><br><br>
 </div>
+
 {% endblock %}

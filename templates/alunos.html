@@ -1,36 +1,54 @@
+<!-- Código para herdar a base -->
 {% extends 'base.html' %}
 
+<!-- Herdando head da base  -->
 {% block head %}
+
 <title>Gerenciamento de Alunos</title>
+
 {% endblock %}
 
+<!-- Herdando body da base -->
 {% block body %}
 
+<!-- Alerta de operação realizada com sucesso -->
 {% if alert==1 %}
+
 <div class="alert alert-success alert-dismissible text-center fade show" role="alert">
     <strong>A operação foi bem sucedida</strong>
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
+
 {% endif %}
 
+<!-- Alerta de operação não realizada -->
 {% if alert==2 %}
+
 <div class="alert alert-danger alert-dismissible text-center fade show" role="alert">
     <strong>A operação falhou</strong>
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
+
 {% endif %}
 
 <div class="col-12">
+
+    <!-- Verificação se encontrou alunos ou não  -->
     {% if verif == 1 %}
+
     <br><br>
     <h1 class="text-center">Nenhum aluno(a) encontrado(a)</h1>
     <br><br>
+
     {% endif %}
+
+    <!-- Busca por alunos -->
     {% if alunos|length < 1 %}
+
     <br><br>
     <div class="col-12 text-center mb-5">
         <h3>Busca de Alunos</h2>
@@ -41,10 +59,12 @@
                 <input type="submit" class="ml-1 mt-2 btn btn-primary mb-2" name="action" value="Buscar Aluno">
             </form>
     </div>
+
+    <!-- Exibição dos dados dos alunos e subsequente opções -->
     {% else %}
+
     <br>
-    <h1 class="text-center">Alunos</h1>
-    <br>
+    <h1 class="text-center">Alunos</h1><br>
     <table class="table table-light table-striped">
         <thead class="bg-info">
             <tr>
@@ -54,19 +74,28 @@
                 <th scope="col">E-mail</th>
                 <th scope="col">Nascimento</th>
                 <th scope="col">Genero</th>
+
+                <!-- Verificando se os dados do aluno está sendo consultado pelas turmas -->
                 {% if noe != 1 %} <th scope="col">Ações</th> {% endif %}
+
             </tr>
         </thead>
         <tbody>
+            <!-- Loop de exibição dos dados de todos os alunos -->
             {% for aluno in alunos %}
+
             <tr>
-                <td>{{aluno.id}}</td>
-                <td>{{aluno.nome}}</td>
-                <td>{{aluno.telefone}}</td>
-                <td>{{aluno.email}}</td>
-                <td>{{aluno.nascimento}}</td>
-                <td>{{aluno.genero}}</td>
+
+                <td>{{aluno.id}}</td> <!-- Id dos alunos -->
+                <td>{{aluno.nome}}</td> <!-- Nome dos alunos -->
+                <td>{{aluno.telefone}}</td> <!-- Telefone dos alunos -->
+                <td>{{aluno.email}}</td> <!-- Email dos alunos -->
+                <td>{{aluno.nascimento}}</td> <!-- Data de nascimento dos alunos -->
+                <td>{{aluno.genero}}</td> <!-- Genero dos alunos -->
+
+                <!-- Verificando se os dados do aluno está sendo consultado pelas turmas -->
                 {% if noe != 1 %}
+
                 <td>
                     <div class="dropdown" role="group">
                         <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"
@@ -74,11 +103,14 @@
                             Ações
                         </button>
                         <div class="dropdown-menu">
+                            
+                            <!-- O código abaixo não está funcionando-->
                             <!--<form action="/turmas.html" method="POST">
-                                <input type="hidden" name="id" value="{{ aluno.id }}" readonly>
-                                <input role="button" type="submit" style="cursor: pointer !important;"
-                                    class="dropdown-item" name="action" value="Ver Matriculas">
-                            </form>-->
+                                                <input type="hidden" name="id" value="{{ aluno.id }}" readonly>
+                                                <input role="button" type="submit" style="cursor: pointer !important;"
+                                                    class="dropdown-item" name="action" value="Ver Matriculas">
+                                            </form>-->
+
                             <form action="/alunos.html" method="POST">
                                 <input type="hidden" name="id" value="{{ aluno.id }}" readonly>
                                 <input role="button" type="submit" class="dropdown-item" name="action" value="Remover">
@@ -87,22 +119,33 @@
                         </div>
                     </div>
                 </td>
+
                 {% endif %}
+
             </tr>
+
             {% endfor %}
+
         </tbody>
     </table>
 
+    <!-- Verificando se os dados do aluno está sendo consultado pela consulta de alunos -->
     {% if nod == 0 %}
+
     <br><a role="button" class="btn btn-primary" href="alunos.html" method="GET">Buscar novo aluno</a>
-    {% endif %}
 
     {% endif %}
 
+    {% endif %}
+
+    <!-- Verificando se os dados do aluno está sendo consultado pela consulta de turmas -->
     {% if noc == 1 %}
+
     <br><a role="button" class="btn btn-primary" href="turmas.html" method="GET">Buscar nova turma</a>
 </div>
+
 {% else %}
+
 <br><br>
 <div class="col-12">
     <div class="row">
@@ -168,8 +211,8 @@
         </div>
     </div>
 </div>
-</div>
-<br><br>
+
 {% endif %}
+</div>
 
 {% endblock %}

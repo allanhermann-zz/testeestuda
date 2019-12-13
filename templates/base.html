@@ -1,12 +1,29 @@
+<!-------------------------------------------------------
+# coding=utf8
+# 
+# Sistema de Controle Escolar
+# Desenvolvido por: Allan Biagio Hermann
+# email: allan.hermann@gmail.com
+# 
+# Utilizado Python Flask para o Backend 
+# MySQL como Banco de Dados 
+# Bootstrap 4 para o Frontend
+#
+# ------------------------------------------------------------->
+
+<!--  Esse é o código base, o qual todas as outra páginas herdarão -->
+
 <!DOCTYPE html>
 <html lang="ptbr">
 
 <head>
+
+    <!-- Meta tags -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <!-- ****** favicons do faviconit.com ****** -->
+    <!-- ****** favicons gerados pelo faviconit.com ****** -->
 	<link rel="shortcut icon" href="/static/favicon/favicon.ico">
 	<link rel="icon" sizes="16x16 32x32 64x64" href="/static/favicon/favicon.ico">
 	<link rel="icon" type="image/png" sizes="196x196" href="/static/favicon/favicon-192.png">
@@ -27,10 +44,8 @@
 	<meta name="msapplication-TileColor" content="#FFFFFF">
 	<meta name="msapplication-TileImage" content="/static/favicon/favicon-144.png">
 	<meta name="msapplication-config" content="/static/favicon/browserconfig.xml">
-	<!-- ****** favicons do faviconit.com ****** -->
 
     <!-- Bootstrap CSS -->
-
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
         integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
@@ -40,27 +55,33 @@
 </head>
 
 <body style="background-color: #C7F0EF;">
+
+    <!-- Header, com o logo da Estuda, e o menu superior -->
     <header class="container-fluid bg-dark border-bottom border-primary" style="border-bottom-width: 5px !important;">
         <div class="row">
             <div class="col-2">
                 <a href="/"><img src="/static/logoestuda.png" class="w-100 mt-2 mb-2 ml-2"></a>
             </div>
             <div class="col btn btn-group" role="group">
-                <a role="button" class="pt-2 btn btn-dark text-primary font-weight-bold"
-                    href="/escolas.html">ESCOLAS</a>
+                <a role="button" class="pt-2 btn btn-dark text-primary font-weight-bold" href="/escolas.html">ESCOLAS</a>
                 <a role="button" class="pt-2 btn btn-dark text-primary font-weight-bold" href="/turmas.html">TURMAS</a>
                 <a role="button" class="pt-2 btn btn-dark text-primary font-weight-bold" href="/alunos.html">ALUNOS</a>
             </div>
-
         </div>
     </header>
+
+    <!-- Container de altura minima 100% da tela -->
     <div class="container min-vh-100">
+
+        <!-- Bloco de herança do corpo -->
         {% block body %} {% endblock %}
+
     </div>
 
 
-
+    <!-- Footer, com o desenvolvedor e suas redes sociais -->
     <footer class="container-fluid bg-dark border-top border-primary " style="border-top-width: 5px !important;">
+
         <div class="row text-primary text-weight-bold">
             <div class="col text-left pt-3">
                 <p>Desenvolvido por Allan Biagio Hermann</p>
@@ -68,20 +89,12 @@
             <div class="col text-right">
                 <a href="https://wa.me/5565981015585" target="_blank"><img src="/static/logowhatsapp.png" width="40px"
                         height="40px" class="image-thumbnail"></a>
-
-
                 <a href="https://www.facebook.com/allan.hermann" target="_blank"><img src="/static/logofacebook.png"
                         width="35px" height="35px" class="image-thumbnail"></a>
-
-
                 <a href="https://twitter.com/allanhellmanns" target="_blank"><img src="/static/logotwitter.png"
                         width="45px" height="45px" class="image-thumbnail"></a>
-
-
                 <a href="mailto:allan.hermann@gmail.com" target="_blank"><img src="/static/logogmail.png" width="50px"
                         height="50px" class="image-thumbnail"></a>
-
-
                 <a href="https://github.com/allanhermann" target="_blank"><img src="/static/logogithub.png" width="55px"
                         height="55px" class="image-thumbnail"></a>
             </div>
@@ -90,7 +103,7 @@
     </footer>
 
 
-    <!-- Scripts JS (JQuery,Popper and Bootstrap) -->
+    <!-- Scripts JS do Bootstrap (JQuery,Popper and Bootstrap) -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>

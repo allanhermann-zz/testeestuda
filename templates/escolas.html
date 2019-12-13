@@ -1,34 +1,54 @@
+<!-- Código para herdar a base -->
 {% extends 'base.html' %}
 
+<!-- Herdando head da base  -->
 {% block head %}
+
 <title>Gerenciamento de Escolas</title>
+
 {% endblock %}
 
+<!-- Herdando body da base -->
 {% block body %}
+
+<!-- Alerta de operação realizada com sucesso -->
 {% if alert==1 %}
-<div class="alert alert-success alert-dismissible fade show text-center" role="alert">
-    <strong>A operação foi bem sucedida</strong> 
+
+<div class="alert alert-success alert-dismissible text-center fade show" role="alert">
+    <strong>A operação foi bem sucedida</strong>
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
+
 {% endif %}
+
+<!-- Alerta de operação não realizada -->
 {% if alert==2 %}
-<div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
-    <strong>A operação falhou</strong> 
+
+<div class="alert alert-danger alert-dismissible text-center fade show" role="alert">
+    <strong>A operação falhou</strong>
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
+
 {% endif %}
 
 <div class="col-12">
+
+    <!-- Verificação se encontrou escolas ou não-->
     {% if verif == 1 %}
+
     <br><br>
     <h1 class="text-center">Nenhuma escola encontrada</h1>
     <br><br>
+
     {% endif %}
+
+    <!-- Busca por escolas -->
     {% if escolas|length < 1 %}
+
     <br><br>
     <div class="col-12 text-center mb-5">
         <h3>Busca de Escolas</h2>
@@ -40,7 +60,9 @@
                 <input type="submit" class="ml-1 mt-2 btn btn-primary mb-2" name="action" value="Buscar Escola">
             </form>
     </div>
+
     {%  else %}
+
     <br>
     <h1 class="text-center">Escolas</h1>
     <br>
@@ -56,13 +78,15 @@
             </tr>
         </thead>
         <tbody>
+
+            <!-- Loop de exibição das escolas -->
             {% for escola in escolas %}
             <tr>
-                <td>{{escola.id}}</td>
-                <td>{{escola.nome}}</td>
-                <td>{{escola.endereco}}</td>
-                <td>{{escola.situacao}}</td>
-                <td>{{escola.data}}</td>
+                <td>{{escola.id}}</td> <!-- Id das escolas -->
+                <td>{{escola.nome}}</td> <!-- Nome das escolas -->
+                <td>{{escola.endereco}}</td> <!-- Endereço das escolas -->
+                <td>{{escola.situacao}}</td> <!-- Situação das escolas -->
+                <td>{{escola.data}}</td> <!-- Data -->
                 <td>
                     <div class="dropdown" role="group">
                         <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"
@@ -76,11 +100,8 @@
                                     class="dropdown-item" name="action" value="Ver Turmas">
                             </form>
                             <a role="button" class="dropdown-item"
-                            href="https://www.google.com.br/maps/place/{{escola.endereco}}" target="blank">Ver
-                            no
-                            Mapa</a>
+                            href="https://www.google.com.br/maps/place/{{escola.endereco}}" target="blank">Ver no Mapa</a>
                             <a role="button" class="dropdown-item" href="/update/escola/{{escola.id}}">Editar</a>
-
                             <form action="/escolas.html" method="POST">
                                 <input type="hidden" name="id" value="{{ escola.id }}" readonly>
                                 <input role="button" type="submit" class="dropdown-item"
@@ -92,11 +113,15 @@
                     </div>
                 </td>
             </tr>
+
             {% endfor %}
+
         </tbody>
     </table>
     <a role="button" class="btn btn-primary" href="/escolas.html" method="GET">Buscar Nova Escola</a>
+
     {%  endif %}
+
 </div>
 <br><br>
 <div class="col-12">
@@ -156,4 +181,5 @@
     </div>
 </div>
 <br><br>
+
 {% endblock %}

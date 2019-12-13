@@ -1,35 +1,54 @@
+<!-- Código para herdar a base -->
 {% extends 'base.html' %}
 
+<!-- Herdando head da base  -->
 {% block head %}
+
 <title>Gerenciamento de Turmas</title>
+
 {% endblock %}
 
+<!-- Herdando body da base -->
 {% block body %}
+
+<!-- Alerta de operação realizada com sucesso -->
 {% if alert==1 %}
+
 <div class="alert alert-success alert-dismissible text-center fade show" role="alert">
     <strong>A operação foi bem sucedida</strong>
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
+
 {% endif %}
 
+<!-- Alerta de operação não realizada -->
 {% if alert==2 %}
+
 <div class="alert alert-danger alert-dismissible text-center fade show" role="alert">
     <strong>A operação falhou</strong>
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
+
 {% endif %}
 
 <div class="col-12">
+
+    <!-- Verificação se alguma escola foi encontrada -->
     {% if verif == 1 %}
+
     <br><br>
     <h1 class="text-center">Nenhuma escola encontrada</h1>
     <br><br>
+
     {% endif %}
+
+    <!-- Verificação se alguma turma foi encontrada-->
     {% if verifa == 1 %}
+
     <br><br>
     <h1 class="text-center">Nenhuma turma cadastrada</h1>
     <br><br><br><br>
@@ -79,9 +98,12 @@
         </div>
     </div>
     <br><br>
+
     {% endif %}
 
+    <!-- Busca de turmas -->
     {% if escolas|length < 1 and turmas|length < 1 %}
+
     <br><br>
     <div class="col-12 text-center mb-5">
         <h3>Busca de Turmas</h2>
@@ -92,8 +114,12 @@
                 <input type="submit" class="ml-1 mt-2 btn btn-primary mb-2" name="action" value="Buscar Escola">
             </form>
     </div>
+
     {% endif %}
+
+    <!-- Busca de escolas -->
     {% if escolas|length > 0 and turmas|length < 1 %}
+
     <br>
     <h1 class="text-center">Escolas</h1>
     <br>
@@ -109,13 +135,16 @@
             </tr>
         </thead>
         <tbody>
+
+            <!-- Loop de exibição das escolas -->
             {% for escola in escolas %}
+
             <tr>
-                <td>{{escola.id}}</td>
-                <td>{{escola.nome}}</td>
-                <td>{{escola.endereco}}</td>
-                <td>{{escola.situacao}}</td>
-                <td>{{escola.data}}</td>
+                <td>{{escola.id}}</td> <!-- Id das escolas -->
+                <td>{{escola.nome}}</td> <!-- Nome das escolas -->
+                <td>{{escola.endereco}}</td> <!-- Endereço das escolas -->
+                <td>{{escola.situacao}}</td> <!-- Situação das escolas -->
+                <td>{{escola.data}}</td> <!-- Data -->
                 <td>
                     <form action="/turmas.html" method="POST">
                         <input type="hidden" name="id" value="{{ escola.id }}" readonly>
@@ -124,11 +153,17 @@
                     <br>
                 </td>
             </tr>
+
             {% endfor %}
+
     </table>
     <br><a role="button" class="btn btn-primary" href="/turmas.html" method="GET">Buscar Novas Escolas</a><br><br>
+    
     {% endif %}
+
+    <!-- Verificando se encontrou alguma turma  -->
     {%  if turmas|length > 0 %}
+
     <br>
     <h1 class="text-center">Turmas</h1>
     <br>
@@ -145,14 +180,17 @@
             </tr>
         </thead>
         <tbody>
+
+            <!-- Loop de exibição das turmas -->
             {% for turma in turmas %}
+
             <tr>
-                <td>{{turma.id}}</td>
-                <td>{{turma.nivel}}</td>
-                <td>{{turma.ano}}</td>
-                <td>{{turma.serie}}</td>
-                <td>{{turma.turno}}</td>
-                <td>{{turma.escola.nome}}</td>
+                <td>{{turma.id}}</td> <!-- Id da turma -->
+                <td>{{turma.nivel}}</td> <!-- Nivel da turma  -->
+                <td>{{turma.ano}}</td> <!-- Ano da turma  -->
+                <td>{{turma.serie}}</td> <!-- Série da turma  -->
+                <td>{{turma.turno}}</td> <!-- Turno da turma  -->
+                <td>{{turma.escola.nome}}</td> <!-- Nome da escola vinculada a turma -->
                 <td>
                     <div class="dropdown" role="group">
                         <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"
@@ -179,13 +217,18 @@
 
                 </td>
             </tr>
+
             {% endfor %}
+
     </table>
     <br><br><br>
+
+    <!-- Verificando se o acesso foi feito pela escola -->
     {% if noc == 1 %}
     <br><a role="button" class="btn btn-primary" href="turmas.html" method="GET">Buscar nova turma</a>
 
     {% else %}
+
     <div class="row">
         <div class="col text-center pt-4">
             <h2>Cadastre nova turma:</h2>
@@ -232,7 +275,11 @@
         </div>
     </div>
     <br><a role="button" class="btn btn-primary" href="/turmas.html" method="GET">Buscar Novas Escolas</a><br><br>
+    
     {% endif %}
+
     {% endif %}
+
 </div>
+
 {% endblock %}
