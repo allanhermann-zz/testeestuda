@@ -2,6 +2,7 @@
 
 from flask import Flask, render_template, url_for, request, redirect
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine
 from datetime import datetime
 import json
 import requests
@@ -34,8 +35,9 @@ try:
 except:
     pass
 
-
-engine = "CLEARDB_DATABASE_URL"
+CLEARDB_DATABASE_URL = "mysql://bd784eaba7307d:4a6bd961@us-cdbr-iron-east-05.cleardb.net/heroku_56973eeaab8af2f"
+#engine = "mysql://root:root@localhost/school"
+engine = CLEARDB_DATABASE_URL
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = engine
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
