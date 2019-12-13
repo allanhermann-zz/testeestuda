@@ -56,6 +56,11 @@
                             Ações
                         </button>
                         <div class="dropdown-menu">
+                            <form action="/turmas.html" method="POST">
+                                <input type="hidden" name="id" value="{{ aluno.id }}" readonly>
+                                <input role="button" type="submit" style="cursor: pointer !important;"
+                                    class="dropdown-item" name="action" value="Ver Matriculas">
+                            </form>
                             <form action="/alunos.html" method="POST">
                                 <input type="hidden" name="id" value="{{ aluno.id }}" readonly>
                                 <input role="button" type="submit" class="dropdown-item" name="action" value="Remover">

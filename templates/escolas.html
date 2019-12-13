@@ -53,15 +53,22 @@
                             Ações
                         </button>
                         <div class="dropdown-menu">
+                            <form action="/turmas.html" method="POST">
+                                <input type="hidden" name="id" value="{{ escola.id }}" readonly>
+                                <input role="button" type="submit" style="cursor: pointer !important;"
+                                    class="dropdown-item" name="action" value="Ver Turmas">
+                            </form>
+                            <a role="button" class="dropdown-item"
+                            href="https://www.google.com.br/maps/place/{{escola.endereco}}" target="blank">Ver
+                            no
+                            Mapa</a>
+                            <a role="button" class="dropdown-item" href="/update/escola/{{escola.id}}">Editar</a>
+
                             <form action="/escolas.html" method="POST">
                                 <input type="hidden" name="id" value="{{ escola.id }}" readonly>
-                                <input role="button" type="submit" class="dropdown-item" name="action" value="Remover">
+                                <input role="button" type="submit" class="dropdown-item"
+                                    style="cursor: pointer !important;" name="action" value="Remover">
                             </form>
-                            <a role="button" class="dropdown-item" href="/update/escola/{{escola.id}}">Editar</a>
-                            <a role="button" class="dropdown-item"
-                                href="https://www.google.com.br/maps/place/{{escola.endereco}}" target="blank">Ver
-                                no
-                                Mapa</a>
 
 
                         </div>

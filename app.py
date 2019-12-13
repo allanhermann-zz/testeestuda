@@ -3,7 +3,8 @@
 from flask import Flask, render_template, url_for, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-import json, requests
+import json
+import requests
 from sqlalchemy_utils import create_database
 
 try:
@@ -17,14 +18,17 @@ try:
         "http://educacao.dadosabertosbr.com/api/escolas/buscaavancada?estado=MT"
     )
 
+
     dadosjson = dados.json()[1]
 
     for jsoncode in range(len(dadosjson)):
         nome = dadosjson[jsoncode]["nome"]
-        endereco = dadosjson[jsoncode]["cidade"] + ", " + dadosjson[jsoncode]["estado"]
+        endereco = dadosjson[jsoncode]["cidade"] + \
+            ", " + dadosjson[jsoncode]["estado"]
         situacao = dadosjson[jsoncode]["situacaoFuncionamentoTxt"]
         data = dadosjson[jsoncode]["anoCenso"]
-        var = Escola(nome=nome, endereco=endereco, situacao=situacao, data=data)
+        var = Escola(nome=nome, endereco=endereco,
+                     situacao=situacao, data=data)
         db.session.add(var)
         db.session.commit()
 except:
@@ -71,6 +75,7 @@ class Turma(db.Model):
     serie = db.Column(db.Integer)
     turno = db.Column(db.String(45))
     escola_id = db.Column(db.Integer, db.ForeignKey("escola.id"))
+    aulas = db.relationship("Aluno", secondary=aulas, backref=db.backref("estudantes"))
 
     def __init__(self, nivel, ano, serie, turno, escola):
         self.nivel = nivel
@@ -88,10 +93,9 @@ class Aluno(db.Model):
     nascimento = db.Column(db.Date)
     genero = db.Column(db.String(1))
     aulas = db.relationship(
-        "Turma", secondary=aulas, backref=db.backref("estudantes"), lazy="dynamic"
-    )
+        "Turma", secondary=aulas, backref=db.backref("estudantes"))
     __table_args__ = (
-        db.UniqueConstraint('nome', 'nascimento','email', name='uniqueAluno'),
+        db.UniqueConstraint('nome', 'nascimento', 'email', name='uniqueAluno'),
     )
 
     def __init__(self, nome, telefone, email, nascimento, genero):
@@ -168,8 +172,8 @@ def updateescola(id):
 #########################--TURMAS--####################
 @app.route("/turmas.html", methods=["POST", "GET"])
 def turmas():
-    turmadados = request.form
     if request.method == "POST":
+        turmadados = request.form
         if turmadados["action"] == "Buscar Escola":
             escolas = Escola.query.filter(
                 Escola.nome.like("%" + turmadados["nome"] + "%")
@@ -179,6 +183,7 @@ def turmas():
             else:
                 verif = 1
             return render_template("turmas.html", escolas=escolas, verif=verif)
+
         elif turmadados["action"] == "Selecionar Escola":
             escola = Escola.query.get_or_404(turmadados["id"])
             turmas = Turma.query.filter_by(escola=escola).all()
@@ -189,9 +194,22 @@ def turmas():
             return render_template(
                 "turmas.html", turmas=turmas, verifa=verifa, escola=escola
             )
+
+        elif turmadados["action"] == "Ver Turmas":
+            escola = Escola.query.get_or_404(turmadados["id"])
+            turmas = Turma.query.filter_by(escola=escola).all()
+            if turmas:
+                verifa = 0
+            else:
+                verifa = 1
+            return render_template(
+                "turmas.html", turmas=turmas, verifa=verifa, escola=escola
+            )
+
         elif turmadados["action"] == "Remover":
             try:
-                db.session.delete(Turma.query.get_or_404(turmadados["id"]))
+                turma = turmadados["id"]
+                db.session.delete(Turma.query.get_or_404(turma))
                 db.session.commit()
                 return render_template("turmas.html")
             except:
@@ -199,6 +217,7 @@ def turmas():
 
         elif turmadados["action"] == "Atualizar turma":
             return render_template("turmas.html", verif=0)
+
         elif turmadados["action"] == "Cadastrar Turma":
             nivel = turmadados["nivel"]
             ano = turmadados["ano"]
@@ -218,6 +237,21 @@ def turmas():
             except:
                 return redirect("/")
 
+
+        elif turmadados["action"] == "Ver Matriculas":
+            aluno = Aluno.query.get_or_404(turmadados["id"])
+            turmas = Turma.query.filter(Turma.estudantes.any(id=aluno.id)).all()
+            print(aluno)
+            print(turmas)
+
+            if turmas:
+                verif=0
+            else:
+                verif=1
+
+            return render_template("turmas.html", turmas=turmas, escola=0, verif=verif)
+
+
         elif turmadados["action"] == "Matricular Alunos":
             return render_template("/alunosturmas.html", turma=turmadados["id"])
 
@@ -234,7 +268,8 @@ def updateturma(id):
         turma.ano = turmadados["ano"]
         turma.serie = turmadados["serie"]
         turma.turno = turmadados["turno"]
-        turma.escola = Escola.query.filter_by(nome=turmadados["escola"]).first()
+        turma.escola = Escola.query.filter_by(
+            nome=turmadados["escola"]).first()
         try:
             db.session.commit()
             return redirect("/turmas.html")
@@ -256,7 +291,8 @@ def alunos():
             nome = alunodados["nome"]
             tel = alunodados["tel"]
             email = alunodados["email"]
-            nascimento = datetime.strptime(alunodados["nascimento"], "%Y-%m-%d")
+            nascimento = datetime.strptime(
+                alunodados["nascimento"], "%Y-%m-%d")
             genero = alunodados["genero"]
             novo_aluno = Aluno(
                 nome=nome,
@@ -281,6 +317,17 @@ def alunos():
                 verif = 1
             return render_template("alunos.html", alunos=alunos, verif=verif)
 
+        elif alunodados["action"] == "Ver Alunos":
+            turma = Turma.query.get_or_404(alunodados["id"])
+            alunos = Aluno.query.filter(Aluno.estudantes.any(id=turma.id)).all()
+
+            if alunos:
+                verif=0
+            else:
+                verif=1
+
+            return render_template("alunos.html", alunos=alunos, verif=verif)
+
         elif alunodados["action"] == "Remover":
             try:
                 db.session.delete(Aluno.query.get_or_404(alunodados["id"]))
@@ -297,14 +344,14 @@ def alunos():
 
 @app.route("/update/aluno/<int:id>", methods=["POST", "GET"])
 def updatealuno(id):
-    aluno = Aluno.query.get_or_404(id)
+    aluno=Aluno.query.get_or_404(id)
     if request.method == "POST":
-        alunodados = request.form
-        aluno.nome = alunodados["nome"]
-        aluno.telefone = alunodados["tel"]
-        aluno.email = alunodados["email"]
-        aluno.nascimento = alunodados["nascimento"]
-        aluno.genero = alunodados["genero"]
+        alunodados=request.form
+        aluno.nome=alunodados["nome"]
+        aluno.telefone=alunodados["tel"]
+        aluno.email=alunodados["email"]
+        aluno.nascimento=alunodados["nascimento"]
+        aluno.genero=alunodados["genero"]
         try:
             db.session.commit()
             return redirect("/alunos.html")
@@ -318,33 +365,33 @@ def updatealuno(id):
 ##################--REL ALUNOS X TURMAS--##############
 @app.route("/alunosturmas.html", methods=["GET", "POST"])
 def matricula():
-    alunoturma = request.form
+    alunoturma=request.form
     if request.method == "POST":
-        turma = alunoturma["turmaid"]
+        turma=alunoturma["turmaid"]
         if alunoturma["action"] == "Buscar Aluno(a)":
-            alunos = Aluno.query.filter(
+            alunos=Aluno.query.filter(
                 Aluno.nome.like("%" + alunoturma["nome"] + "%")
             ).all()
             if alunos:
-                verif = 0
+                verif=0
             else:
-                verif = 1
+                verif=1
             return render_template(
                 "alunosturmas.html", turma=turma, alunos=alunos, verif=verif
             )
 
         elif alunoturma["action"] == "Matricular Aluno(a)":
-            turmas = Turma.query.get_or_404(alunoturma["turmaid"])
-            aluno = Aluno.query.get_or_404(alunoturma["alunoid"])
+            turmas=Turma.query.get_or_404(alunoturma["turmaid"])
+            aluno=Aluno.query.get_or_404(alunoturma["alunoid"])
             try:
                 turmas.estudantes.append(aluno)
                 db.session.commit()
                 return render_template("alunosturmas.html", turma=turma)
             except:
                 return redirect("/")
-        
+
         elif alunoturma["action"] == "Buscar novo aluno(a)":
-            return render_template("alunosturmas.html",turma=turma)
+            return render_template("alunosturmas.html", turma=turma)
     else:
         return render_template("alunosturmas.html", turma=turma)
 

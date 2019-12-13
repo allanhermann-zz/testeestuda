@@ -21,7 +21,7 @@
             <form class="form-inline justify-content-center" action="/alunosturmas.html" method="POST">
                 <input type="text" name="nome" class="form-control w-50" id="buscaEscola" placeholder="Nome do Aluno">
                 <input type="hidden" name="turmaid" value="{{ turma }}" >
-                <input type="submit" class="ml-1 mt-2 btn btn-primary mb-2" name="action" value="Buscar Aluno(a)">
+                <input type="submit" style="cursor: pointer !important;" class="ml-1 mt-2 btn btn-primary mb-2" name="action" value="Buscar Aluno(a)">
             </form>
     </div>
     {% else %}
@@ -53,7 +53,7 @@
                 <form action="/alunosturmas.html" method="POST">
                     <input type="hidden" name="alunoid" value="{{ aluno.id }}" readonly>
                     <input type="hidden" name="turmaid" value="{{ turma }}" >
-                    <input type="submit" role="button" class="btn btn-primary" name="action" value="Matricular Aluno(a)">
+                    <input type="submit" role="button" class="btn btn-primary" name="action" style="cursor: pointer !important;" value="Matricular Aluno(a)">
                 </form>
             </td>
         </tr>
@@ -61,7 +61,7 @@
     </table>
     <form action="/alunosturmas.html" method="POST">
         <input type="hidden" name="turmaid" value="{{ turma }}" >
-        <input type="submit" role="button" class="btn btn-primary" name="action" value="Buscar novo aluno(a)">
+        <input type="submit" role="button" style="cursor: pointer !important;" class="btn btn-primary" name="action" value="Buscar novo aluno(a)">
     </form>
     {%  endif %}
     <br><br><br>

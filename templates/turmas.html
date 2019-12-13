@@ -144,13 +144,17 @@
                         <div class="dropdown-menu">
                             <form action="/turmas.html" method="POST">
                                 <input type="hidden" name="id" value="{{ turma.id }}" readonly>
-                                <input role="button" type="submit" class="dropdown-item" name="action" value="Remover">
+                                <input role="button" style="cursor: pointer !important;" type="submit" class="dropdown-item" name="action" value="Remover">
+                            </form>
+                            <form action="/alunos.html" method="POST">
+                                <input type="hidden" name="id" value="{{ turma.id }}" readonly>
+                                <input role="button" style="cursor: pointer !important;" type="submit" class="dropdown-item" name="action" value="Ver Alunos">
                             </form>
                             <form action="/turmas.html" method="POST">
                                 <a role="button" class="dropdown-item" href="/update/turma/{{turma.id}}">Editar</a>
                                 <form action="/turmas.html" method="POST">
                                     <input type="hidden" name="id" value="{{ turma.id }}">
-                                    <input type="submit" class="dropdown-item" name="action" value="Matricular Alunos">
+                                    <input type="submit" style="cursor: pointer !important;" class="dropdown-item" name="action" value="Matricular Alunos">
                                 </form>
                         </div>
                     </div>
