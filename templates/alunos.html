@@ -6,6 +6,24 @@
 
 {% block body %}
 
+{% if alert==1 %}
+<div class="alert alert-success alert-dismissible text-center fade show" role="alert">
+    <strong>A operação foi bem sucedida</strong>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endif %}
+
+{% if alert==2 %}
+<div class="alert alert-danger alert-dismissible text-center fade show" role="alert">
+    <strong>A operação falhou</strong>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endif %}
+
 <div class="col-12">
     {% if verif == 1 %}
     <br><br>
@@ -17,8 +35,7 @@
     <div class="col-12 text-center mb-5">
         <h3>Busca de Alunos</h2>
             <small class="form-text text-muted pb-2">Digite o nome completo, parte do nome do Aluno ou deixe em branco
-                para listar
-                todos</small>
+                para listar todos</small>
             <form class="form-inline justify-content-center" action="/alunos.html" method="POST">
                 <input type="text" name="nome" class="form-control w-50" id="buscaAluno" placeholder="Nome do Aluno">
                 <input type="submit" class="ml-1 mt-2 btn btn-primary mb-2" name="action" value="Buscar Aluno">
@@ -72,9 +89,12 @@
             </tr>
             {% endfor %}
     </table>
-    <br><a href="alunos.html" method="GET">Buscar novo aluno</a>
     {%  endif %}
+{% if noc == 1 %}
+    <br><a role="button" class="btn btn-primary" href="turmas.html" method="GET">Buscar nova turma</a>
 </div>
+{% else %}
+<br><a role="button" class="btn btn-primary" href="alunos.html" method="GET">Buscar novo aluno</a>
 <br><br>
 <h4 class="text-center">Ou...</h4>
 <br><br>
@@ -143,5 +163,6 @@
     </div>
 </div>
 <br><br>
+{% endif %}
 
 {% endblock %} 
