@@ -35,7 +35,7 @@ except:
     pass
 
 
-engine = "DATABASE_URL"
+engine = "CLEARDB_DATABASE_URL"
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = engine
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
