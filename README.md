@@ -48,6 +48,11 @@ Ou pule para o próximo passo se deseja utilizar o já configurado ClearDB MySQL
 python app.py
 ```
 
+* Passo 5: Acesse o sistema em
+```
+localhost:5000
+```
+
 ## Versão online
 
   Uma versão online está disponível no Heroku, e pode ser acessada através do seguinte link:
